@@ -13,9 +13,12 @@ return new class extends Migration
     {
         Schema::create('absensi', function (Blueprint $table) {
             $table->id();
+            // $table->foreignId('siswa_id')->references('id')->on('siswa');
             $table->date('tanggal');
-            $table->dateTime('jam_masuk');
-            $table->string('keterangan');
+            $table->time('jam_masuk');
+            $table->time('jam_pulang')->default('00:00:00');
+            $table->string('status', 5);
+            $table->string('keterangan')->nullable();
             $table->timestamps();
         });
     }

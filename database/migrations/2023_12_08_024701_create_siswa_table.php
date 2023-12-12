@@ -18,6 +18,8 @@ return new class extends Migration
             $table->string('jurusan');
             $table->string('kelas');
             $table->string('no_hp');
+            $table->string('nik');
+            $table->string('password');
             $table->timestamps();
         });
     }
