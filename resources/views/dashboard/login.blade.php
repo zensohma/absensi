@@ -24,7 +24,9 @@ background: wheat;
             <div class="col-12 col-md-8 col-lg-6 col-xl-5">
               <div class="card bg-success text-white" style="border-radius: 1rem;">
                 <div class="card-body p-5 text-center">
-      
+
+                <form action="/login" method="post">
+                  @csrf
                   <div class="mb-md-5 mt-md-4 pb-5">
       
                     <h2 class="fw-bold mb-2 text-uppercase">Login PKL</h2>
@@ -44,7 +46,7 @@ background: wheat;
                     <a href="index.html"><button class="btn btn-outline-light btn-lg px-5" type="submit">Login</button></a>
       
                   </div>
-      
+                </form>
                   <div>
                     <p class="mb-0">Login Sebagai Operator</p><a href="loginoprator.html" class="text-white-50 fw-bold">Klik Disini</a>
                     </p>
