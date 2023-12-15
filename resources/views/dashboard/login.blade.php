@@ -24,18 +24,34 @@ background: wheat;
             <div class="col-12 col-md-8 col-lg-6 col-xl-5">
               <div class="card bg-success text-white" style="border-radius: 1rem;">
                 <div class="card-body p-5 text-center">
+                  @if (session()->has('success'))
+                  <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    {{ session('success') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                  </div>
+                  @endif
 
+                  @if (session()->has('loginError'))
+                  <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    {{ session('loginError') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                  </div>
+                  @endif
                 <form action="/login" method="post">
                   @csrf
                   <div class="mb-md-5 mt-md-4 pb-5">
       
                     <h2 class="fw-bold mb-2 text-uppercase">Login PKL</h2>
                     <p class="text-white-50 mb-5">Masukan NIK dan Password anda dengan benar!!</p>
-      
+                    
                     <div class="form-outline form-white mb-4">
-                        <label class="form-label" for="typeNik">NIK</label>
-                        <input type="text" id="typeEmailX" class="form-control form-control-lg" />
-                      
+                        <label class="form-label" for="nik">NIK</label>
+                        <input type="text" id="nik" class="form-control form-control-lg" name="nik">
+                        @error('nik')
+                          <div class="invalid-feedback">
+                            {{ $message }}
+                          </div>
+                        @enderror
                     </div>
       
                     <div class="form-outline form-white mb-4">
