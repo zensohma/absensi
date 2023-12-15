@@ -10,5 +10,9 @@ class Siswa extends Model
     use HasFactory;
 
     protected $table = 'siswa';
-    protected $fillable = ['nik', 'password'];
+    protected $guarded = ['id'];
+    public function absen()
+    {
+        return $this->hasMany(Absen::class, 'id');
+    }
 }

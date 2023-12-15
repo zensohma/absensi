@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\AbsenController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\SiswaController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use App\Models\Siswa;
@@ -20,10 +22,11 @@ Route::get('/', function () {
     return view('dashboard.index');
 });
 
-Route::get('/apalah', function () {
-    return view('dashboard.absen');
-});
+Route::get('/absensi', [AbsenController::class, 'index']);
+Route::post('/absensi/upate/{id}', [AbsenController::class, 'update']);
+Route::post('/absensi/filter', [AbsenController::class, 'filterDataByNama']);
 
+Route::get('/siswa', [SiswaController::class, 'index']);
 
 Route::get('/login', [LoginController::class, 'index'])->name('login')->middleware('guest');
 

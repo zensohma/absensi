@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Absen;
+use App\Models\Siswa;
 use Illuminate\Http\Request;
 
 class AbsenController extends Controller
@@ -12,7 +13,13 @@ class AbsenController extends Controller
      */
     public function index()
     {
-        
+        $data = Absen::all();
+        $filteredData = [];
+
+        return view('dashboard.absen', [
+            'data' => $data,
+            'filteredData' => $filteredData
+        ]);
     }
 
     /**
@@ -61,5 +68,20 @@ class AbsenController extends Controller
     public function destroy(Absen $absen)
     {
         //
+    }
+
+    public function filterDataByNama(Request $request)
+    {
+        $nama = $request->nama;
+        // dd($nama);
+
+        $filteredData = Absen::where('siswa_id', $nama)->get();
+        $data = Absen::all();
+
+        return view('dashboard.absen', [
+            'filteredData' => $filteredData,
+            // 'siswa' => Siswa::all(),
+            'data' => $data
+        ]);
     }
 }
