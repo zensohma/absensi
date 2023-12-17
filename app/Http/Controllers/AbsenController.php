@@ -13,12 +13,14 @@ class AbsenController extends Controller
      */
     public function index()
     {
-        $data = Absen::all();
+        $data = Siswa::all();
         $filteredData = [];
 
         return view('dashboard.absen', [
             'data' => $data,
-            'filteredData' => $filteredData
+            'filteredData' => $filteredData,
+            'nama' => '',
+            'selected' => ''
         ]);
     }
 
@@ -35,7 +37,18 @@ class AbsenController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // dd($request);
+        $request->validate([
+            'siswa_id' => 'required',
+            'tanggal' => 'required',
+            'jam_masuk' => 'required',
+            'status' => 'required'
+        ]);
+
+        $data = $request->except(['_token']);
+        Absen::create($data);
+
+        return redirect('/absensi');
     }
 
     /**
@@ -57,31 +70,61 @@ class AbsenController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Absen $absen)
+    public function update(Request $request, $id)
     {
-        //
+        $find = Absen::findOrFail($id);
+        // dd($nama);
+        // $request->validate([
+        //     'siswa_id' => 'required',
+        //     'tanggal' => 'required',
+        //     'jam_masuk' => 'required',
+        //     'jam_keluar' => 'required',
+        //     'status' => 'required'
+        // ]);
+        // dd($request);
+        
+        $data = $request->except(['_token', 'nama']);
+        // dd($data);
+        $find->update($data);
+
+        // return redirect()->back()->with($request->nama);
+        return redirect('/absensi');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Absen $absen)
+    public function destroy($id)
     {
-        //
+        $data = Absen::find($id);
+        $data->delete();
+
+        return redirect('/absensi');
     }
 
     public function filterDataByNama(Request $request)
     {
+        // dd($request);
         $nama = $request->nama;
-        // dd($nama);
 
-        $filteredData = Absen::where('siswa_id', $nama)->get();
-        $data = Absen::all();
+        $filteredData = Absen::with('siswa')->where('siswa_id', $nama)->get();
+        $absen = Absen::all();
+        $data = Siswa::all();
+        // dd($data);
 
-        return view('dashboard.absen', [
+        return response()->json([
             'filteredData' => $filteredData,
-            // 'siswa' => Siswa::all(),
-            'data' => $data
+            'absen' => $absen,
+            'data' => Siswa::all(),
+            'nama' => $nama,
+            'selected' => ''
         ]);
+        // return view('dashboard.absen', [
+        //     'filteredData' => $filteredData,
+        //     'absen' => $absen,
+        //     'data' => Siswa::all(),
+        //     'nama' => $nama,
+        //     'selected' => ''
+        // ]);
     }
 }

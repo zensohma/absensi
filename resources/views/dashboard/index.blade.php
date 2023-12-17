@@ -1,10 +1,10 @@
 @extends('layouts.admin')
 
 @section('content')
-    <div class="col-6">
+    <div class="col-6 ms-3">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb mb-0 d-flex align-items-center">
-                <li class="breadcrumb-item"><a href="{{url('/')}}" class="link"><i
+                <li class="breadcrumb-item"><a href="{{ url('/') }}" class="link"><i
                             class="mdi mdi-home-outline fs-4"></i></a></li>
                 <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
             </ol>
