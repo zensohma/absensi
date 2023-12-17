@@ -12,10 +12,8 @@ class LoginController extends Controller
             'title' => 'login',
             'active' => 'login'
         ]);
-
-       
+          
     }
-
     public function authenticate(Request $request) {
         $credentials = $request->validate([
             'nik' => 'required',

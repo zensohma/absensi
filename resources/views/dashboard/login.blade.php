@@ -24,7 +24,9 @@ background: wheat;
             <div class="col-12 col-md-8 col-lg-6 col-xl-5">
               <div class="card bg-success text-white" style="border-radius: 1rem;">
                 <div class="card-body p-5 text-center">
-                  @if (session()->has('success'))
+                  
+                  
+                  @if(session()->has('success'))
                   <div class="alert alert-success alert-dismissible fade show" role="alert">
                     {{ session('success') }}
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
