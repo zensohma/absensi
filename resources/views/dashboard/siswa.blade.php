@@ -23,8 +23,7 @@
                         <!-- rekapnya ke excel -->
 
                         <!-- Button trigger modal -->
-                        <a href="inpudataabsen.html" class="btn btn-primary" data-bs-toggle="modal"
-                            data-bs-target="#inputModal">
+                        <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#inputModal">
                             Input Data
                         </a>
 
@@ -47,15 +46,18 @@
                                             <label for="sekolah" class="form-label">Sekolah</label>
                                             <input type="text" class="form-control" id="sekolah" name="sekolah"
                                                 placeholder="Sekolah" required>
+                                            <label for="jurusan" class="form-label">Jurusan</label>
+                                            <input type="text" class="form-control" id="jurusan" name="jurusan"
+                                                placeholder="Jurusan" required>
                                             <label for="kelas" class="form-label">Kelas</label>
                                             <input type="text" class="form-control" id="kelas" name="kelas"
                                                 placeholder="Kelas" required>
                                             <label for="no_hp" class="form-label">Nomor HP</label>
                                             <input type="text" class="form-control" id="no_hp" name="no_hp"
                                                 placeholder="Nomor HP" required>
-                                            <label for="nik" class="form-label">NIK</label>
-                                            <input type="text" class="form-control" id="nik" name="nik"
-                                                placeholder="NIK" required>
+                                            <label for="nis" class="form-label">NIS</label>
+                                            <input type="text" class="form-control" id="nis" name="nis"
+                                                placeholder="NIS" required>
                                             <label for="password" class="form-label">Password</label>
                                             <input type="text" class="form-control" id="password" name="password"
                                                 placeholder="Password" readonly>
@@ -84,7 +86,7 @@
                                         <th scope="col">Jurusan</th>
                                         <th scope="col">Kelas</th>
                                         <th scope="col">No HP</th>
-                                        <th scope="col">NIK</th>
+                                        <th scope="col">NIS</th>
                                         <th scope="col">Password</th>
                                         <th scope="col">Action</th>
                                     </tr>
@@ -98,7 +100,7 @@
                                             <td>{{ $dataSiswa->jurusan }}</td>
                                             <td>{{ $dataSiswa->kelas }}</td>
                                             <td>{{ $dataSiswa->no_hp }}</td>
-                                            <td>{{ $dataSiswa->nik }}</td>
+                                            <td>{{ $dataSiswa->nis }}</td>
                                             <td>{{ $dataSiswa->password }}</td>
                                             <td>
                                                 <a class="btn btn-danger"
@@ -151,10 +153,10 @@
                                                                         id="no_hp" name="no_hp"
                                                                         placeholder="Nomor HP"
                                                                         value="{{ $dataSiswa->no_hp }}" required>
-                                                                    <label for="nik" class="form-label">NIK</label>
+                                                                    <label for="nis" class="form-label">NIS</label>
                                                                     <input type="text" class="form-control"
-                                                                        id="nikk" name="nik" placeholder="NIK"
-                                                                        value="{{ $dataSiswa->password }}" required>
+                                                                        id="niss" name="nis" placeholder="NIS"
+                                                                        value="{{ $dataSiswa->nis }}" required>
                                                                     <label for="password"
                                                                         class="form-label">Password</label>
                                                                     <input type="text" class="form-control"
@@ -186,7 +188,7 @@
     </div>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const input1 = document.getElementById('nik');
+            const input1 = document.getElementById('nis');
             const input2 = document.getElementById('password');
 
             input1.addEventListener('input', function() {
@@ -196,7 +198,7 @@
     </script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const input3 = document.getElementById('nikk');
+            const input3 = document.getElementById('niss');
             const input4 = document.getElementById('passwordd');
 
             input3.addEventListener('input', function() {

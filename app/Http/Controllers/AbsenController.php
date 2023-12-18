@@ -98,7 +98,7 @@ class AbsenController extends Controller
     {
         $data = Absen::find($id);
         $data->delete();
-
+        
         return redirect('/absensi');
     }
 

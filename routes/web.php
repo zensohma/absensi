@@ -27,7 +27,11 @@ Route::post('/absensi/store', [AbsenController::class, 'store']);
 Route::post('/absensi/update/{id}', [AbsenController::class, 'update']);
 Route::get('/absensi/destroy/{id}', [AbsenController::class, 'destroy']);
 Route::post('/absensi/filter', [AbsenController::class, 'filterDataByNama']);
+
 Route::get('/siswa', [SiswaController::class, 'index']);
+Route::post('/siswa/store', [SiswaController::class, 'store']);
+Route::post('/siswa/update/{id}', [SiswaController::class, 'update']);
+Route::get('/siswa/destroy/{id}', [SiswaController::class, 'destroy']);
 
 Route::get('/login', [LoginController::class, 'index'])->name('login')->middleware('guest');
 
