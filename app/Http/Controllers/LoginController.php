@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
-    public function index(Request $request) {
+    public function index() {
         return view('dashboard.login', [
             'title' => 'login',
             'active' => 'login'
@@ -15,8 +15,9 @@ class LoginController extends Controller
           
     }
     public function authenticate(Request $request) {
+        // dd($request);
         $credentials = $request->validate([
-            'nik' => 'required',
+            'nis' => 'required',
             'password' => 'required'
         ]);
 
@@ -24,8 +25,9 @@ class LoginController extends Controller
             $request->session()->regenerate();
             return redirect()->intended('/');
 
-            return back()->with('LoginError', 'Login Failed');
         }
+
+        return back()->with('LoginError', 'Login Failed');
     }
 
     public function logout(Request $request) {

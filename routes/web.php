@@ -18,9 +18,8 @@ use App\Models\Siswa;
 |
 */
 
-Route::get('/', function () {
-    return view('dashboard.index');
-});
+
+
 
 Route::get('/absensi', [AbsenController::class, 'index']);
 Route::post('/absensi/store', [AbsenController::class, 'store']);
@@ -28,14 +27,17 @@ Route::post('/absensi/update/{id}', [AbsenController::class, 'update']);
 Route::get('/absensi/destroy/{id}', [AbsenController::class, 'destroy']);
 Route::post('/absensi/filter', [AbsenController::class, 'filterDataByNama']);
 
+//halaman login
+
+
+Route::get('/login', [LoginController::class, 'index'])->name('login');
+Route::post('/login', [LoginController::class, 'authenticate']);
+
+
+
 Route::get('/siswa', [SiswaController::class, 'index']);
 Route::post('/siswa/store', [SiswaController::class, 'store']);
 Route::post('/siswa/update/{id}', [SiswaController::class, 'update']);
 Route::get('/siswa/destroy/{id}', [SiswaController::class, 'destroy']);
 
-Route::get('/login', [LoginController::class, 'index'])->name('login')->middleware('guest');
-
-Route::post('/login', [LoginController::class, 'authenticate']);
-
 Route::post('/logout', [LoginController::class, 'logout']);
-

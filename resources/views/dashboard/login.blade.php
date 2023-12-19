@@ -39,7 +39,7 @@ background: wheat;
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                   </div>
                   @endif
-                <form action="/login" method="post">
+                <form action="{{ url('/login') }}" method="post">
                   @csrf
                   <div class="mb-md-5 mt-md-4 pb-5">
       
@@ -47,9 +47,9 @@ background: wheat;
                     <p class="text-white-50 mb-5">Masukan NIK dan Password anda dengan benar!!</p>
                     
                     <div class="form-outline form-white mb-4">
-                        <label class="form-label" for="nik">NIK</label>
-                        <input type="text" id="nik" class="form-control form-control-lg" name="nik">
-                        @error('nik')
+                        <label class="form-label" for="nis">NIS</label>
+                        <input type="text" id="nis" class="form-control form-control-lg" name="nis">
+                        @error('nis')
                           <div class="invalid-feedback">
                             {{ $message }}
                           </div>
@@ -58,10 +58,10 @@ background: wheat;
       
                     <div class="form-outline form-white mb-4">
                         <label class="form-label" for="typePasswordX">Password</label>
-                        <input type="password" id="typePasswordX" class="form-control form-control-lg" />
+                        <input type="password" id="typePasswordX" class="form-control form-control-lg" name="password"/>
                     </div>
-      
-                    <a href="index.html"><button class="btn btn-outline-light btn-lg px-5" type="submit">Login</button></a>
+                    
+                    <button class="btn btn-outline-light btn-lg px-5" type="submit">Login</button>
       
                   </div>
                 </form>

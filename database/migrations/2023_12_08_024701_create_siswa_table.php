@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('no_hp');
             $table->string('nis')->unique();
             $table->string('password');
+            $table->boolean('is_siswa')->default(true);
             $table->timestamps();
         });
     }
