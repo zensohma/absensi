@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('nis')->unique();
             $table->string('password');
             $table->foreignId('level_id')->default(2)->references('id')->on('level');
+            $table->boolean('is_siswa')->default(true);
             $table->timestamps();
         });
     }

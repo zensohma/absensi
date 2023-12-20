@@ -7,16 +7,18 @@ use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
-    public function index(Request $request) {
+    public function index() {
         return view('dashboard.login', [
             'title' => 'login',
             'active' => 'login'
         ]);
-          
     }
+    
     public function authenticate(Request $request) {
         // dd($request);
+        // dd($request);
         $credentials = $request->validate([
+            'nis' => 'required',
             'nis' => 'required',
             'password' => 'required'
         ]);
