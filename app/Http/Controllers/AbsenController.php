@@ -37,7 +37,7 @@ class AbsenController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request);
+        dd($request);
         $request->validate([
             'siswa_id' => 'required',
             'tanggal' => 'required',
@@ -47,8 +47,19 @@ class AbsenController extends Controller
 
         $data = $request->except(['_token']);
         Absen::create($data);
+        $nama = $request->nama;
 
-        return redirect('/absensi');
+        $filteredData = Absen::with('siswa')->where('siswa_id', $nama)->get();
+        $absen = Absen::all();
+        $data = Siswa::all();
+
+        return response()->json([
+            'filteredData' => $filteredData,
+            'absen' => $absen,
+            'data' => Siswa::all(),
+            'nama' => $nama,
+            'selected' => ''
+        ]); 
     }
 
     /**

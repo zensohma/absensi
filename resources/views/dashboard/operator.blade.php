@@ -1,55 +1,193 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Bootstrap demo</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-  </head>
-  <style>
-    .gradient-custom {
-/* fallback for old browsers */
-background: wheat;
+@extends('layouts.admin')
 
-/* Chrome 10-25, Safari 5.1-6 */
-background: wheat;
-/* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-background: wheat;
-}
-  </style>
-  <body>
-    <section class="gradient-custom">
-        <div class="container py-5 h-150">
-          <div class="row d-flex justify-content-center align-items-center h-100">
-            <div class="col-12 col-md-8 col-lg-6 col-xl-5">
-              <div class="card bg-success text-white" style="border-radius: 1rem;">
-                <div class="card-body p-5 text-center">
-      
-                  <div class="mb-md-5 mt-md-4 pb-5">
-      
-                    <h2 class="fw-bold mb-2 text-uppercase">Login</h2>
-                    <p class="text-white-50 mb-5">Please enter your login and password!</p>
-      
-                    <div class="form-outline form-white mb-4">
-                        <label class="form-label" for="typeNik">username</label>
-                        <input type="text" id="typeEmailX" class="form-control form-control-lg" />
-                      
+@section('content')
+    <div class="col-6 ms-3">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0 d-flex align-items-center">
+                <li class="breadcrumb-item"><a href="{{ url('/') }}" class="link"><i
+                            class="mdi mdi-home-outline fs-4"></i></a></li>
+                <li class="breadcrumb-item active" aria-current="page">Input Operator</li>
+            </ol>
+        </nav>
+        <h1 class="mb-0 fw-bold">Input Operator</h1>
+    </div>
+    <div class="container-fluid">
+        <!-- ============================================================== -->
+        <!-- Start Page Content -->
+        <!-- ============================================================== -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body" style="background-color: rgb(238, 234, 234);">
+                        <button type="button" class="btn btn-success">Rekap Data</button>
+                        <!-- rekapnya ke excel -->
+
+                        <!-- Button trigger modal -->
+                        <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#inputModal">
+                            Input Data
+                        </a>
+
+                        <!-- Modal -->
+                        <div class="modal fade" id="inputModal" tabindex="-1" aria-labelledby="staticBackdropLabel"
+                            aria-hidden="true" style="color: black;">
+                            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                                <div class="modal-content">
+                                    <div class="modal-header" style="background-color: rgb(124, 206, 142); ">
+                                        <h5 class="modal-title" id="staticBackdropLabel">Isi Operator</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                    </div>
+                                    <form action="{{ url('operator/store') }}" method="post">
+                                        @csrf
+                                        <div class="modal-body " style="border-radius: 10px;">
+                                            <label for="nama" class="form-label">Nama</label>
+                                            <input type="text" class="form-control" id="nama" name="nama"
+                                                placeholder="Nama" required>
+                                            <label for="alamat" class="form-label">Alamat</label>
+                                            <input type="text" class="form-control" id="alamat" name="alamat"
+                                                placeholder="Alamat" required>
+                                            <label for="no_hp" class="form-label">Nomor HP</label>
+                                            <input type="text" class="form-control" id="no_hp" name="no_hp"
+                                                placeholder="Nomor HP" required>
+                                            <label for="username" class="form-label">Username</label>
+                                            <input type="text" class="form-control" id="username" name="username"
+                                                placeholder="Username" required>
+                                            <label for="password" class="form-label">Password</label>
+                                            <input type="text" class="form-control" id="password" name="password"
+                                                placeholder="Password" readonly>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary"
+                                                data-bs-dismiss="modal">Tutup</button>
+                                            <button type="submit" class="btn btn-primary">Simpan</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">No</th>
+                                        <th scope="col">Nama</th>
+                                        <th scope="col">Alamat</th>
+                                        <th scope="col">No HP</th>
+                                        <th scope="col">Username</th>
+                                        <th scope="col">Password</th>
+                                        <th scope="col">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($data as $dataOperator)
+                                        <tr>
+                                            <th scope="row">{{ $dataOperator->id }}</th>
+                                            <td>{{ $dataOperator->nama }}</td>
+                                            <td>{{ $dataOperator->alamat }}</td>
+                                            <td>{{ $dataOperator->no_hp }}</td>
+                                            <td>{{ $dataOperator->username }}</td>
+                                            <td>{{ $dataOperator->password }}</td>
+                                            <td>
+                                                <a class="btn btn-danger"
+                                                    href="{{ url('operator/destroy/' . $dataOperator->id) }}">Hapus</a>
+                                                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                                    data-bs-target="#editModal{{ $dataOperator->id }}">Edit</button>
+
+                                                <!-- Modal -->
+                                                <div class="modal fade" id="editModal{{ $dataOperator->id }}"
+                                                    tabindex="-1" aria-labelledby="staticBackdropLabel"
+                                                    aria-hidden="true" style="color: black;">
+                                                    <div
+                                                        class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header"
+                                                                style="background-color: rgb(124, 206, 142); ">
+                                                                <h5 class="modal-title" id="staticBackdropLabel">Edit
+                                                                    Operator
+                                                                </h5>
+                                                                <button type="button" class="btn-close"
+                                                                    data-bs-dismiss="modal" aria-label="Close"></button>
+                                                            </div>
+                                                            <form
+                                                                action="{{ url('operator/update/' . $dataOperator->id) }}"
+                                                                method="post">
+                                                                @csrf
+                                                                <div class="modal-body " style="border-radius: 10px;">
+                                                                    <label for="nama" class="form-label">Nama</label>
+                                                                    <input type="text" class="form-control"
+                                                                        id="nama" name="nama" placeholder="Nama"
+                                                                        value="{{ $dataOperator->nama }}" required>
+                                                                    <label for="alamat"
+                                                                        class="form-label">Alamat</label>
+                                                                    <input type="text" class="form-control"
+                                                                        id="alamat" name="alamat"
+                                                                        placeholder="Alamat"
+                                                                        value="{{ $dataOperator->alamat }}" required>
+                                                                    <label for="no_hp" class="form-label">Nomor
+                                                                        HP</label>
+                                                                    <input type="text" class="form-control"
+                                                                        id="no_hp" name="no_hp"
+                                                                        placeholder="Nomor HP"
+                                                                        value="{{ $dataOperator->no_hp }}" required>
+                                                                    <label for="username"
+                                                                        class="form-label">Username</label>
+                                                                    <input type="text" class="form-control"
+                                                                        id="usernamee" name="username"
+                                                                        placeholder="Username"
+                                                                        value="{{ $dataOperator->username }}" required>
+                                                                    <label for="password"
+                                                                        class="form-label">Password</label>
+                                                                    <input type="text" class="form-control"
+                                                                        id="passwordd" name="password"
+                                                                        placeholder="{{ $dataOperator->password }}"
+                                                                        readonly>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-secondary"
+                                                                        data-bs-dismiss="modal">Tutup</button>
+                                                                    <button type="submit"
+                                                                        class="btn btn-primary">Simpan</button>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
-      
-                    <div class="form-outline form-white mb-4">
-                        <label class="form-label" for="typePasswordX">Password</label>
-                        <input type="password" id="typePasswordX" class="form-control form-control-lg" />
-                    </div>
-      
-                    <a href="index.html"><button class="btn btn-outline-light btn-lg px-5" type="submit">Login</button></a>
-      
+
                 </div>
-      
-                </div>
-              </div>
             </div>
-          </div>
         </div>
-      </section>    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
-  </body>
-</html>
+    </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const input1 = document.getElementById('username');
+            const input2 = document.getElementById('password');
+
+            input1.addEventListener('input', function() {
+                input2.value = input1.value;
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const input3 = document.getElementById('usernamee');
+            const input4 = document.getElementById('passwordd');
+
+            input3.addEventListener('input', function() {
+                input4.value = input3.value;
+            });
+        });
+    </script>
+@endsection

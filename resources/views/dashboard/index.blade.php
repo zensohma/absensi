@@ -12,6 +12,7 @@
         <h1 class="mb-0 fw-bold">Dashboard</h1>
     </div>
     <div class="card text-white mb-4 stretch-card" style="width: 100%; background-color: #4cb162;">
-        <div class="card-body" style="text-align: center; font-size: 25px;">Selamat Datang Di Absensi</div>
+        <div class="card-body" style="text-align: center; font-size: 25px;">Selamat Datang {{ auth()->user()->nama }} Di
+            Absensi</div>
     </div>
 @endsection

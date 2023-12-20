@@ -11,16 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('siswa', function (Blueprint $table) {
+        Schema::create('operator', function (Blueprint $table) {
             $table->id();
             $table->string('nama');
-            $table->string('sekolah');
-            $table->string('jurusan');
-            $table->string('kelas');
+            $table->string('alamat');
             $table->string('no_hp');
-            $table->string('nis')->unique();
+            $table->string('username')->unqiue();
             $table->string('password');
-            $table->foreignId('level_id')->default(2)->references('id')->on('level');
+            $table->foreignId('level_id')->default(1)->references('id')->on('level');
             $table->timestamps();
         });
     }
@@ -30,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('siswa');
+        Schema::dropIfExists('operator');
     }
 };

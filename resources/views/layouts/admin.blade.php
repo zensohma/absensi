@@ -99,14 +99,29 @@
                                 <span class="hide-menu" style="margin-left: 5px;">Data Absen</span>
                             </a>
                         </li>
-
-                        <li class="sidebar-item">
-                            <a class="sidebar-link waves-effect waves-dark sidebar-link" href="{{ url('/siswa') }}"
-                                aria-expanded="false">
-                                <i class="fa fa-plus ps-3" style="font-size: 20px; margin-right: 10px;"></i>
-                                <span class="hide-menu" style="margin-left: 5px;">Tambah Data Siswa</span>
-                            </a>
-                        </li>
+                        @can('operator')
+                            <li class="sidebar-item">
+                                <a class="sidebar-link waves-effect waves-dark sidebar-link" href="{{ url('/siswa') }}"
+                                    aria-expanded="false">
+                                    <i class="fa fa-plus ps-3" style="font-size: 20px; margin-right: 10px;"></i>
+                                    <span class="hide-menu" style="margin-left: 5px;">Tambah Data Siswa</span>
+                                </a>
+                            </li>
+                            <li class="sidebar-item">
+                                <a class="sidebar-link waves-effect waves-dark sidebar-link" href="{{ url('/operator') }}"
+                                    aria-expanded="false">
+                                    <i class="fa fa-plus ps-3" style="font-size: 20px; margin-right: 10px;"></i>
+                                    <span class="hide-menu" style="margin-left: 5px;">Tambah Data Operator</span>
+                                </a>
+                            </li>
+                            <li class="sidebar-item">
+                                <a class="sidebar-link waves-effect waves-dark sidebar-link" href="{{ url('/level') }}"
+                                    aria-expanded="false">
+                                    <i class="fa fa-plus ps-3" style="font-size: 20px; margin-right: 10px;"></i>
+                                    <span class="hide-menu" style="margin-left: 5px;">Tambah Data Level</span>
+                                </a>
+                            </li>
+                        @endcan
 
                         <li class="sidebar-item">
                             {{-- <a class="sidebar-link waves-effect waves-dark sidebar-link" href="login.html"

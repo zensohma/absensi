@@ -12,7 +12,6 @@
         <h1 class="mb-0 fw-bold mb-3">Data Absen</h1>
         <div>
             <div id="filterForm">
-                @csrf
                 <label for="nama">Pilih Nama:</label>
                 <select id="selectButton" onchange="handleSelection()" class="form-control mb-2" name="nama"
                     {{-- id="nama" --}}>
@@ -54,13 +53,10 @@
                                         <button type="button" class="btn-close" data-bs-dismiss="modal"
                                             aria-label="Close"></button>
                                     </div>
-                                    <form id="absenForm" action="{{ url('/absensi/store') }}" method="POST">
-                                        @csrf
+                                    <div id="absenForm">
                                         <div class="form-group">
                                             <input id="siswa_id" type="hidden" name="siswa_id" class="form-control"
-                                                value="
-                                                {{-- {{ auth()->user()->id }} --}}
-                                                1">
+                                                value="{{ auth()->user()->id }}">
                                         </div>
                                         <div class="form-group">
                                             <input id="tanggal" type="hidden" name="tanggal" class="form-control">
@@ -83,9 +79,10 @@
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary"
                                                 data-bs-dismiss="modal">Tutup</button>
-                                            <button type="sumbit" class="btn btn-primary">Simpan</button>
+                                            <button type="button" class="btn btn-primary"
+                                                onclick="handleInput()">Simpan</button>
                                         </div>
-                                    </form>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -144,23 +141,23 @@
                                                                 method="post">
                                                                 @csrf
                                                                 <div class="modal-body " style="border-radius: 10px;">
-                                                                    <input id="siswa_id" type="hidden" name="siswa_id"
+                                                                    <input id="siswa_idd" type="hidden" name="siswa_id"
                                                                         class="form-control"
                                                                         value="{{ $tableData->siswa_id }}">
-                                                                    <input id="tanggal" type="hidden" name="tanggal"
+                                                                    <input id="tanggall" type="hidden" name="tanggal"
                                                                         class="form-control"
                                                                         value="{{ $tableData->tanggal }}">
-                                                                    <input id="jam_masuk" type="hidden" name="jam_masuk"
-                                                                        class="form-control"
+                                                                    <input id="jam_masukk" type="hidden"
+                                                                        name="jam_masuk" class="form-control"
                                                                         value="{{ $tableData->jam_masuk }}">
-                                                                    <input id="jam_pulang" type="hidden"
+                                                                    <input id="jam_pulangg" type="hidden"
                                                                         name="jam_pulang" class="form-control"
                                                                         value="{{ $tableData->jam_pulang }}">
-                                                                    <input id="nama" type="hidden" name="nama"
+                                                                    <input id="namaa" type="hidden" name="nama"
                                                                         class="form-control" value="{{ $nama }}">
                                                                     <label for="selectBarang"
                                                                         class="form-label">Status</label>
-                                                                    <select id="status" name="status"
+                                                                    <select id="statuss" name="status"
                                                                         class="form-select"
                                                                         aria-label="Default select example">
                                                                         @if ('hadir' === $tableData->status)
@@ -174,7 +171,7 @@
                                                                     <label for="keterangan"
                                                                         class="form-label">Keterangan</label>
                                                                     <input type="text" class="form-control"
-                                                                        id="keterangan" name="keterangan"
+                                                                        id="keterangann" name="keterangan"
                                                                         placeholder="Keterangan"
                                                                         value="{{ $tableData->keterangan }}" required>
                                                                 </div>
@@ -305,24 +302,24 @@
                                                                 method="post">
                                                                 @csrf
                                                                 <div class="modal-body " style="border-radius: 10px;">
-                                                                    <input id="siswa_id" type="hidden" name="siswa_id"
+                                                                    <input id="siswa_idd" type="hidden" name="siswa_id"
                                                                         class="form-control"
                                                                         value="` + row.siswa_id + `">
-                                                                    <input id="tanggal" type="hidden" name="tanggal"
+                                                                    <input id="tanggall" type="hidden" name="tanggal"
                                                                         class="form-control"
                                                                         value="` + row.tanggal + `">
-                                                                    <input id="jam_masuk" type="hidden" name="jam_masuk"
+                                                                    <input id="jam_masukk" type="hidden" name="jam_masuk"
                                                                         class="form-control"
                                                                         value="` + row.jam_masuk + `">
-                                                                    <input id="jam_pulang" type="hidden"
+                                                                    <input id="jam_pulangg" type="hidden"
                                                                         name="jam_pulang" class="form-control"
                                                                         value="` + row.jam_pulang + `">
-                                                                    <input id="nama" type="hidden" name="nama"
+                                                                    <input id="namaa" type="hidden" name="nama"
                                                                         class="form-control" value="` + selectButton
                             .val() + `">
                                                                     <label for="selectBarang"
                                                                         class="form-label">Status</label>
-                                                                    <select id="status" name="status"
+                                                                    <select id="statuss" name="status"
                                                                         class="form-select"
                                                                         aria-label="Default select example">
                                                                         @if ('hadir' === `+ row.status +`)
@@ -336,7 +333,7 @@
                                                                     <label for="keterangan"
                                                                         class="form-label">Keterangan</label>
                                                                     <input type="text" class="form-control"
-                                                                        id="keterangan" name="keterangan"
+                                                                        id="keterangann" name="keterangan"
                                                                         placeholder="Keterangan"
                                                                         value="` + row.keterangan + `" required>
                                                                 </div>
@@ -352,15 +349,126 @@
                                             </td>
                                         </tr>`
                     });
-
-
-
                     parent.append(html);
                 },
                 error: function(error) {
                     console.error('Error:', error);
                 }
             });
+        }
+    </script>
+    <script>
+        function handleInput() {
+            let updateUrl = `{{ url('absensi/update/' . `+ row.id +`) }}`
+            const siswa_id = $('#siswa_id')
+            const tanggal = $('#tanggal')
+            const jam_masuk = $('#jam_masuk')
+            const status = $('#status')
+            const keterangan = $('#keterangan')
+            const selectButton = $('#selectButton')
+            $.ajax({
+                type: 'POST',
+                url: '/absensi/store',
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    siswa_id: siswa_id.val(),
+                    tanggal: tanggal.val(),
+                    jam_masuk: jam_masuk.val(),
+                    status: status.val(),
+                    keterangan: keterangan.val(),
+                    nama: selectButton.val()
+                },
+                success: function(response) {
+                    console.log(response)
+
+                    let parent = $('#tableBody')
+
+                    parent.empty()
+                    let html = ``
+                    response.filteredData.forEach(row => {
+                        html += `<tr>
+                                            <th scope="row">` + row.id + `</th>
+                                            <td>` + row.siswa.nama + `</td>
+                                            <td>` + row.tanggal + `</td>
+                                            <td>` + row.jam_masuk + `</td>
+                                            <td>` + row.jam_pulang + `</td>
+                                            <td>` + row.status + `</td>
+                                            <td>` + row.keterangan + `</td>
+                                            <td>
+                                                <a href="{{ url('/absensi/destroy/' . `+ row.id +`) }}"
+                                                    class="btn btn-danger">Delete</a>
+                                                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                                    data-bs-target="#editModal` + row.id + `">Edit</button>
+
+                                                <!-- Modal -->
+                                                <div class="modal fade" id="editModal` + row.id + `">
+                                                        <div class="modal-content modal-dialog">
+                                                            <div class="modal-header"
+                                                                style="background-color: rgb(124, 206, 142); ">
+                                                                <h5 class="modal-title" id="staticBackdropLabel">Edit
+                                                                    Absen
+                                                                </h5>
+                                                                <button type="button" class="btn-close"
+                                                                    data-bs-dismiss="modal" aria-label="Close"></button>
+                                                            </div>
+                                                            <form id="formEdit"
+                                                                action="` + updateUrl + `"
+                                                                method="post">
+                                                                @csrf
+                                                                <div class="modal-body " style="border-radius: 10px;">
+                                                                    <input id="siswa_idd" type="hidden" name="siswa_id"
+                                                                        class="form-control"
+                                                                        value="` + row.siswa_id + `">
+                                                                    <input id="tanggall" type="hidden" name="tanggal"
+                                                                        class="form-control"
+                                                                        value="` + row.tanggal + `">
+                                                                    <input id="jam_masukk" type="hidden" name="jam_masuk"
+                                                                        class="form-control"
+                                                                        value="` + row.jam_masuk + `">
+                                                                    <input id="jam_pulangg" type="hidden"
+                                                                        name="jam_pulang" class="form-control"
+                                                                        value="` + row.jam_pulang + `">
+                                                                    <input id="namaa" type="hidden" name="nama"
+                                                                        class="form-control" value="` + selectButton
+                            .val() + `">
+                                                                    <label for="selectBarang"
+                                                                        class="form-label">Status</label>
+                                                                    <select id="statuss" name="status"
+                                                                        class="form-select"
+                                                                        aria-label="Default select example">
+                                                                        @if ('hadir' === `+ row.status +`)
+                                                                            <option value="hadir" selected>Hadir</option>
+                                                                            <option value="izin">Izin</option>
+                                                                        @elseif ('izin' === `+ row.status +`)
+                                                                            <option value="hadir">Hadir</option>
+                                                                            <option value="izin" selected>Izin</option>
+                                                                        @endif
+                                                                    </select>
+                                                                    <label for="keterangan"
+                                                                        class="form-label">Keterangan</label>
+                                                                    <input type="text" class="form-control"
+                                                                        id="keterangann" name="keterangan"
+                                                                        placeholder="Keterangan"
+                                                                        value="` + row.keterangan + `" required>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-secondary"
+                                                                        data-bs-dismiss="modal">Tutup</button>
+                                                                    <div class="btn btn-primary" onclick="submitForm()">
+                                                                        Simpan</div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>`
+                    });
+                    parent.append(html);
+                },
+                error: function(error) {
+                    console.error('Error:', error);
+                }
+            })
         }
     </script>
 @endsection
