@@ -43,6 +43,11 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+
+        'operator' => [
+            'driver' => 'session',
+            'provider' => 'operator'
+        ]
     ],
 
     /*
@@ -68,10 +73,10 @@ return [
             'model' => Siswa::class,
         ],
 
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
+        'operator' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Operator::class,
+        ]
     ],
 
     /*

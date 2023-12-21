@@ -7,6 +7,7 @@ use App\Http\Controllers\OperatorController;
 use App\Http\Controllers\SiswaController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\LoginOperatorController;
 use App\Models\Siswa;
 
 /*
@@ -48,6 +49,9 @@ Route::middleware(['operator'])->group(function () {
 Route::middleware(['guest'])->group(function () {
     Route::get('/login', [LoginController::class, 'index'])->name('login');
     Route::post('/login', [LoginController::class, 'authenticate']);
+    Route::get('/loginoperator', [LoginOperatorController::class, 'index']);
+    Route::post('/loginoperator', [LoginOperatorController::class, 'authenticate']);
+    
 });
 
 Route::middleware(['auth'])->group(function () {

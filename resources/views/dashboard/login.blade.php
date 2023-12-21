@@ -71,7 +71,7 @@
                                 </div>
                             </form>
                             <div>
-                                <p class="mb-0">Login Sebagai Operator</p><a href="loginoprator.html"
+                                <p class="mb-0">Login Sebagai Operator</p><a href="/loginoperator"
                                     class="text-white-50 fw-bold">Klik Disini</a>
                                 </p>
                             </div>
