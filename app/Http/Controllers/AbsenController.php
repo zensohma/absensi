@@ -37,15 +37,16 @@ class AbsenController extends Controller
      */
     public function store(Request $request)
     {
-        dd($request);
-        $request->validate([
-            'siswa_id' => 'required',
-            'tanggal' => 'required',
-            'jam_masuk' => 'required',
-            'status' => 'required'
-        ]);
+        // dd($request);
+        // $request->validate([
+        //     'siswa_id' => 'required',
+        //     'status' => 'required'
+        // ]);
 
         $data = $request->except(['_token']);
+        $data['tanggal'] = date('Y-m-d');
+        $data['jam_masuk'] = date('H:i:s');
+        // dd($data);
         Absen::create($data);
         $nama = $request->nama;
 

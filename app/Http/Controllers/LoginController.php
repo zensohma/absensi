@@ -21,12 +21,13 @@ class LoginController extends Controller
             'nis' => 'required',
             'password' => 'required'
         ]);
-        if (Auth::attempt($credentials)) {
+        // dd($credentials);
+        if (Auth::guard('web')->attempt($credentials)) {
             $request->session()->regenerate();
             return redirect()->intended('/');
 
         }
-        // return back()->with('LoginError', 'Login Failed');
+        return back()->with('LoginError', 'Login Failed');
     }
 
     public function logout(Request $request) {

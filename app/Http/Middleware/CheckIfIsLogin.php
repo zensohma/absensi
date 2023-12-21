@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class CheckIfIsSiswa
+class CheckIfIsLogin
 {
     /**
      * Handle an incoming request.
@@ -15,13 +15,14 @@ class CheckIfIsSiswa
      */
     public function handle(Request $request, Closure $next): Response
     {
-        
-            if(auth()->user()->level_id == 2)
+        if(auth()->check())
+        {
+            if(auth()->user()->level_id == 1 || auth()->user()->level_id == 2)
             {
                 return $next($request);
             }
-            // abort(403);
-        
+            abort(403);
+        }
         return redirect('/login');
     }
 }

@@ -2,6 +2,7 @@
 // use App\Models\Siswa;
 
 use App\Models\Siswa;
+use App\Models\Operator;
 
 return [
 
@@ -17,6 +18,7 @@ return [
     */
 
     'defaults' => [
+        // salahnya itu disini nah
         'guard' => 'web',
         'passwords' => 'users',
     ],
@@ -46,7 +48,7 @@ return [
 
         'operator' => [
             'driver' => 'session',
-            'provider' => 'operator'
+            'provider' => 'operators',
         ]
     ],
 
@@ -73,9 +75,9 @@ return [
             'model' => Siswa::class,
         ],
 
-        'operator' => [
+        'operators' => [
             'driver' => 'eloquent',
-            'model' => App\Models\Operator::class,
+            'model' => Operator::class,
         ]
     ],
 

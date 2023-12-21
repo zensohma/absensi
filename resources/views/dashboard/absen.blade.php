@@ -79,7 +79,7 @@
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary"
                                                 data-bs-dismiss="modal">Tutup</button>
-                                            <button type="button" class="btn btn-primary"
+                                            <button id="inputButton" type="button" class="btn btn-primary"
                                                 onclick="handleInput()">Simpan</button>
                                         </div>
                                     </div>
@@ -228,20 +228,20 @@
     </div>
 
     <script>
-        document.getElementById('absenForm').addEventListener('submit', function() {
-            // Mendapatkan tanggal dan jam saat ini
-            var currentDateTime = new Date();
+        // document.getElementById('absenForm').addEventListener('submit', function() {
+        //     // Mendapatkan tanggal dan jam saat ini
+        //     var currentDateTime = new Date();
 
-            // Format tanggal menjadi 'YYYY-MM-DD'
-            var formattedDate = currentDateTime.toISOString().split('T')[0];
+        //     // Format tanggal menjadi 'YYYY-MM-DD'
+        //     var formattedDate = currentDateTime.toISOString().split('T')[0];
 
-            // Format jam menjadi 'HH:mm:ss'
-            var formattedTime = currentDateTime.toTimeString().split(' ')[0];
+        //     // Format jam menjadi 'HH:mm:ss'
+        //     var formattedTime = currentDateTime.toTimeString().split(' ')[0];
 
-            // Set nilai input hidden
-            document.getElementById('tanggal').value = formattedDate;
-            document.getElementById('jam_masuk').value = formattedTime;
-        });
+        //     // Set nilai input hidden
+        //     document.getElementById('tanggal').value = formattedDate;
+        //     document.getElementById('jam_masuk').value = formattedTime;
+        // });
     </script>
     <script>
         function handleSelection() {
@@ -463,6 +463,7 @@
                                             </td>
                                         </tr>`
                     });
+                    $('#inputModal').modal('hide')
                     parent.append(html);
                 },
                 error: function(error) {

@@ -19,10 +19,10 @@ class LoginOperatorController extends Controller
             'username' => 'required',
             'password' => 'required'
         ]);
-
-        if (Auth::guard('operator')->attempt(['username' => $request->username, 'password' =>
-        $request->password], $request->remember)) {
-            return redirect()->intended(route('operator'));
+        // dd($credentials);
+        if (Auth::guard('operator')->attempt($credentials)) {
+            $request->session()->regenerate();
+            return redirect()->intended('/');
         }
 
         return back()->with('LoginError', 'Login Failed');
