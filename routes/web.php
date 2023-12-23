@@ -27,6 +27,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/absensi/update/{id}', [AbsenController::class, 'update']);
     Route::get('/absensi/destroy/{id}', [AbsenController::class, 'destroy']);
     Route::post('/absensi/filter', [AbsenController::class, 'filterDataByNama']);
+    Route::post('/absensi/pulang/{id}', [AbsenController::class, 'pulang']);
 });
 
 Route::middleware('auth:operator')->group(function () {

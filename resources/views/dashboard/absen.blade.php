@@ -10,6 +10,7 @@
             </ol>
         </nav>
         <h1 class="mb-0 fw-bold mb-3">Data Absen</h1>
+        @can('operator')
         <div>
             <div id="filterForm">
                 <label for="nama">Pilih Nama:</label>
@@ -26,6 +27,7 @@
                 </select>
             </div>
         </div>
+        @endcan
     </div>
     <div class="container-fluid">
         <!-- ============================================================== -->
@@ -38,10 +40,12 @@
                         <button type="button" class="btn btn-success mb-3">Rekap Data</button>
                         <!-- rekapnya ke excel -->
 
+                        @can('siswa')
                         <!-- Button trigger modal -->
                         <a class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#inputModal">
                             Input Data
                         </a>
+                        @endcan
 
                         <!-- Modal -->
                         <div class="modal fade" id="inputModal" tabindex="-1" aria-labelledby="staticBackdropLabel"
@@ -106,6 +110,22 @@
                                     </tr>
                                 </thead>
                                 <tbody id="tableBody">
+                                    @foreach ($filteredData as $item)
+                                    <tr>
+                                        <th scope="row">{{$item->id}}</th>
+                                        <td>{{$item->siswa->nama}}</td>
+                                        <td>{{$item->tanggal}}</td>
+                                        <td>{{$item->jam_masuk}}</td>
+                                        <td>{{$item->jam_pulang}}</td>
+                                        <td>{{$item->status}}</td>
+                                        <td>{{$item->keterangan}}</td>
+                                        <td>
+                                            @can('siswa')
+                                            <button onclick="handlePulang({{$item->id}})" class="btn btn-success">Pulang</button>
+                                            @endcan
+                                        </td>
+                                    </tr>
+                                    @endforeach
                                 </tbody>
                             </table>
                         </div>
@@ -145,7 +165,6 @@
                     let html = ``
                     response.filteredData.forEach(row => {
                         // console.log(row)
-                        let updateUrl = "{{ url('/absensi/update') }}/" + row.id
                         html += `<tr>
                                             <th scope="row"> ` + row.id + ` </th>
                                             <td>` + row.siswa.nama + `</td>
@@ -155,10 +174,13 @@
                                             <td>` + row.status + `</td>
                                             <td>` + row.keterangan + `</td>
                                             <td>
-                                                <a href="{{ url('/absensi/destroy/' . `+ row.id +`) }}"
-                                                    class="btn btn-danger">Delete</a>
-                                                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                                    data-bs-target="#editModal` + row.id + `">Edit</button>
+                                                @can('operator')
+                                                <button onclick="handleDelete(` + row.id + `)" class="btn btn-danger">Delete</button>
+                                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal` + row.id + `">Edit</button>
+                                                @endcan
+                                                @can('siswa')
+                                                <button onclick="handlePulang(` + row.id + `)" class="btn btn-success">Pulang</button>
+                                                @endcan
 
                                                 <!-- Modal -->
                                                 <div class="modal fade" id="editModal` + row.id + `">
@@ -200,8 +222,7 @@
                                                                     <input type="text" class="form-control keterangann"
                                                                         id="keterangann" name="keterangan"
                                                                         placeholder="Keterangan"
-                                                                        value="` + row.keterangan +
-                            `" required>
+                                                                        value="` + row.keterangan + `" required>
                                                                 </div>
                                                                 <div class="modal-footer">
                                                                     <button type="button" class="btn btn-secondary"
@@ -230,7 +251,6 @@
             const jam_masuk = $('#jam_masuk')
             const status = $('#status')
             const keterangan = $('#keterangan')
-            const selectButton = $('#selectButton')
             $.ajax({
                 type: 'POST',
                 url: '/absensi/store',
@@ -240,8 +260,7 @@
                     tanggal: tanggal.val(),
                     jam_masuk: jam_masuk.val(),
                     status: status.val(),
-                    keterangan: keterangan.val(),
-                    nama: selectButton.val()
+                    keterangan: keterangan.val()
                 },
                 success: function(response) {
                     console.log(response)
@@ -251,75 +270,20 @@
                     parent.empty()
                     let html = ``
                     response.filteredData.forEach(row => {
-                        let updateUrl = `{{ url('absensi/update/' . ` + row.id + `) }}`
                         html += `<tr>
-                            <th scope="row">` + row.id + `</th>
-                                            <td>` + row.siswa.nama + `</td>
-                                            <td>` + row.tanggal + `</td>
-                                            <td>` + row.jam_masuk + `</td>
-                                            <td>` + row.jam_pulang + `</td>
-                                            <td>` + row.status + `</td>
-                                            <td>` + row.keterangan + `</td>
-                                            <td>
-                                                <a href="{{ url('/absensi/destroy/' . `+ row.id +`) }}"
-                                                    class="btn btn-danger">Delete</a>
-                                                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                                    data-bs-target="#editModal` + row.id + `">Edit</button>
-
-                                                <!-- Modal -->
-                                                <div class="modal fade" id="editModal` + row.id + `">
-                                                        <div class="modal-content modal-dialog">
-                                                            <div class="modal-header"
-                                                                style="background-color: rgb(124, 206, 142); ">
-                                                                <h5 class="modal-title" id="staticBackdropLabel">Edit
-                                                                    Absen
-                                                                </h5>
-                                                                <button type="button" class="btn-close"
-                                                                    data-bs-dismiss="modal" aria-label="Close"></button>
-                                                            </div>
-                                                            <form id="formEdit"
-                                                                action="` + updateUrl + `"
-                                                                method="post">
-                                                                @csrf
-                                                                <div class="modal-body " style="border-radius: 10px;">
-                                                                    <input id="siswa_idd" type="hidden" name="siswa_id"
-                                                                        class="form-control"
-                                                                        value="` + row.siswa_id + `">
-                                                                    <input id="tanggall" type="hidden" name="tanggal"
-                                                                        class="form-control"
-                                                                        value="` + row.tanggal + `">
-                                                                    <input id="jam_masukk" type="hidden" name="jam_masuk"
-                                                                        class="form-control"
-                                                                        value="` + row.jam_masuk + `">
-                                                                    <input id="jam_pulangg" type="hidden"
-                                                                        name="jam_pulang" class="form-control"
-                                                                        value="` + row.jam_pulang + `">
-                                                                    <input id="namaa" type="hidden" name="nama"
-                                                                        class="form-control" value="` + selectButton
-                            .val() + `">
-                                                                    <label for="selectBarang" class="form-label">Status</label>
-                                                                    <select id="statuss" name="status" class="form-select" aria-label="Default select example">
-                                                                        <option value="hadir" ${row.status === 'hadir' ? 'selected' : ''}>Hadir</option>
-                                                                        <option value="izin" ${row.status === 'izin' ? 'selected' : ''}>Izin</option>
-                                                                    </select>
-                                                                    <label for="keterangan"
-                                                                        class="form-label">Keterangan</label>
-                                                                    <input type="text" class="form-control"
-                                                                        id="keterangann" name="keterangan"
-                                                                        placeholder="Keterangan"
-                                                                        value="` + row.keterangan + `" required>
-                                                                </div>
-                                                                <div class="modal-footer">
-                                                                    <button type="button" class="btn btn-secondary"
-                                                                        data-bs-dismiss="modal">Tutup</button>
-                                                                    <button type="submit"
-                                                                        class="btn btn-primary">Simpan</button>
-                                                            </form>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                        </tr>`
+                                        <th scope="row">` + row.id + `</th>
+                                        <td>` + row.siswa.nama + `</td>
+                                        <td>` + row.tanggal + `</td>
+                                        <td>` + row.jam_masuk + `</td>
+                                        <td>` + row.jam_pulang + `</td>
+                                        <td>` + row.status + `</td>
+                                        <td>` + row.keterangan + `</td>
+                                        <td>
+                                            @can('siswa')
+                                            <button onclick="handlePulang(` + row.id + `)" class="btn btn-success">Pulang</button>
+                                            @endcan
+                                        </td>
+                                    </tr>`
                     });
                     $('#inputModal').modal('hide')
                     parent.append(html);
@@ -336,13 +300,13 @@
             // var test = JSON.parse(row)
             // let absen_id = $(this).absen('id');
             // const absen_id = $('row.absen_id')
-            // console.log(keterangan)
             // const siswa_idd = $('row.siswa_id')
             // const tanggall = $('row.tanggal')
             // const jam_masukk = $('row.jam_masuk')
             // const statuss = $('row.status')
-            // const keterangann = $('row.keterangan')
+            const keterangann = $('#keterangann').absen_id
             const selectButton = $('#selectButton')
+            console.log(keterangann)
             $.ajax({
                 type: 'POST',
                 url: `/absensi/update/${absen_id}`,
@@ -366,7 +330,7 @@
                     response.filteredData.forEach(row => {
                         let updateUrl = `{{ url('absensi/update/' . ` + row.id + `) }}`
                         html += `<tr>
-                            <th scope="row">` + row.id + `</th>
+                            <th scope="row"> ` + row.id + ` </th>
                                             <td>` + row.siswa.nama + `</td>
                                             <td>` + row.tanggal + `</td>
                                             <td>` + row.jam_masuk + `</td>
@@ -374,10 +338,9 @@
                                             <td>` + row.status + `</td>
                                             <td>` + row.keterangan + `</td>
                                             <td>
-                                                <a href="{{ url('/absensi/destroy/' . `+ row.id +`) }}"
-                                                    class="btn btn-danger">Delete</a>
-                                                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                                    data-bs-target="#editModal` + row.id + `">Edit</button>
+                                                <button onclick="handleDelete(` + row.id + `)" class="btn btn-danger">Delete</button>
+                                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal` + row.id + `">Edit</button>
+                                                <button onclick="handlePulang(` + row.id + `)" class="btn btn-success">Pulang</button>
 
                                                 <!-- Modal -->
                                                 <div class="modal fade" id="editModal` + row.id + `">
@@ -390,34 +353,33 @@
                                                                 <button type="button" class="btn-close"
                                                                     data-bs-dismiss="modal" aria-label="Close"></button>
                                                             </div>
-                                                            <form id="formEdit"
-                                                                action="` + updateUrl + `"
-                                                                method="post">
-                                                                @csrf
+                                                            <div>
                                                                 <div class="modal-body " style="border-radius: 10px;">
                                                                     <input id="siswa_idd" type="hidden" name="siswa_id"
-                                                                        class="form-control"
+                                                                        class="form-control siswa_idd"
                                                                         value="` + row.siswa_id + `">
                                                                     <input id="tanggall" type="hidden" name="tanggal"
-                                                                        class="form-control"
+                                                                        class="form-control tanggall"
                                                                         value="` + row.tanggal + `">
                                                                     <input id="jam_masukk" type="hidden" name="jam_masuk"
-                                                                        class="form-control"
+                                                                        class="form-control jam_masukk"
                                                                         value="` + row.jam_masuk + `">
                                                                     <input id="jam_pulangg" type="hidden"
-                                                                        name="jam_pulang" class="form-control"
+                                                                        name="jam_pulang" class="form-control jam_pulangg"
                                                                         value="` + row.jam_pulang + `">
                                                                     <input id="namaa" type="hidden" name="nama"
-                                                                        class="form-control" value="` + selectButton
+                                                                        class="form-contro namaa" value="` +
+                            selectButton
                             .val() + `">
-                                                                    <label for="selectBarang" class="form-label">Status</label>
-                                                                    <select id="statuss" name="status" class="form-select" aria-label="Default select example">
+                                                                    <label for="selectBarang"
+                                                                        class="form-label">Status</label>
+                                                                    <select id="statuss" name="status" class="form-select statuss" aria-label="Default select example">
                                                                         <option value="hadir" ${row.status === 'hadir' ? 'selected' : ''}>Hadir</option>
                                                                         <option value="izin" ${row.status === 'izin' ? 'selected' : ''}>Izin</option>
                                                                     </select>
                                                                     <label for="keterangan"
                                                                         class="form-label">Keterangan</label>
-                                                                    <input type="text" class="form-control"
+                                                                    <input type="text" class="form-control keterangann"
                                                                         id="keterangann" name="keterangan"
                                                                         placeholder="Keterangan"
                                                                         value="` + row.keterangan + `" required>
@@ -425,9 +387,8 @@
                                                                 <div class="modal-footer">
                                                                     <button type="button" class="btn btn-secondary"
                                                                         data-bs-dismiss="modal">Tutup</button>
-                                                                    <button type="submit"
-                                                                        class="btn btn-primary">Simpan</button>
-                                                            </form>
+                                                                        <button id="updateButton" onclick="handleUpdate(` + row.id + `, ` + row.siswa_id + `, '` + row.tanggal + `', '` + row.jam_masuk + `', '` + row.jam_pulang + `', '` + row.status + `', '` + row.keterangan + `')" type="button" class="btn btn-primary">Simpan</button>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -441,6 +402,147 @@
                     console.error('Error:', error);
                 }
             })
+        }
+    </script>
+    {{-- buat tombol delete --}}
+    <script>
+        function handleDelete(absen_id) 
+        {
+            // console.log(absen_id)
+            const selectButton = $('#selectButton')
+            $.ajax({
+                type: 'GET',
+                url: `/absensi/destroy/${absen_id}`,
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    nama: selectButton.val()
+                },
+                success: function(response) {
+                    console.log(response)
+
+                    let parent = $('#tableBody')
+
+                    parent.empty()
+                    let html = ``
+                    response.filteredData.forEach(row => {
+                        // console.log(row)
+                        html += `<tr>
+                                            <th scope="row"> ` + row.id + ` </th>
+                                            <td>` + row.siswa.nama + `</td>
+                                            <td>` + row.tanggal + `</td>
+                                            <td>` + row.jam_masuk + `</td>
+                                            <td>` + row.jam_pulang + `</td>
+                                            <td>` + row.status + `</td>
+                                            <td>` + row.keterangan + `</td>
+                                            <td>
+                                                @can('operator')
+                                                <button onclick="handleDelete(` + row.id + `)" class="btn btn-danger">Delete</button>
+                                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal` + row.id + `">Edit</button>
+                                                @endcan
+                                                @can('siswa')
+                                                <button onclick="handlePulang(` + row.id + `)" class="btn btn-success">Pulang</button>
+                                                @endcan
+
+                                                <!-- Modal -->
+                                                <div class="modal fade" id="editModal` + row.id + `">
+                                                        <div class="modal-content modal-dialog">
+                                                            <div class="modal-header"
+                                                                style="background-color: rgb(124, 206, 142); ">
+                                                                <h5 class="modal-title" id="staticBackdropLabel">Edit
+                                                                    Absen
+                                                                </h5>
+                                                                <button type="button" class="btn-close"
+                                                                    data-bs-dismiss="modal" aria-label="Close"></button>
+                                                            </div>
+                                                            <div>
+                                                                <div class="modal-body " style="border-radius: 10px;">
+                                                                    <input id="siswa_idd" type="hidden" name="siswa_id"
+                                                                        class="form-control siswa_idd"
+                                                                        value="` + row.siswa_id + `">
+                                                                    <input id="tanggall" type="hidden" name="tanggal"
+                                                                        class="form-control tanggall"
+                                                                        value="` + row.tanggal + `">
+                                                                    <input id="jam_masukk" type="hidden" name="jam_masuk"
+                                                                        class="form-control jam_masukk"
+                                                                        value="` + row.jam_masuk + `">
+                                                                    <input id="jam_pulangg" type="hidden"
+                                                                        name="jam_pulang" class="form-control jam_pulangg"
+                                                                        value="` + row.jam_pulang + `">
+                                                                    <input id="namaa" type="hidden" name="nama"
+                                                                        class="form-contro namaa" value="` +
+                            selectButton
+                            .val() + `">
+                                                                    <label for="selectBarang"
+                                                                        class="form-label">Status</label>
+                                                                    <select id="statuss" name="status" class="form-select statuss" aria-label="Default select example">
+                                                                        <option value="hadir" ${row.status === 'hadir' ? 'selected' : ''}>Hadir</option>
+                                                                        <option value="izin" ${row.status === 'izin' ? 'selected' : ''}>Izin</option>
+                                                                    </select>
+                                                                    <label for="keterangan"
+                                                                        class="form-label">Keterangan</label>
+                                                                    <input type="text" class="form-control keterangann"
+                                                                        id="keterangann" name="keterangan"
+                                                                        placeholder="Keterangan"
+                                                                        value="` + row.keterangan + `" required>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-secondary"
+                                                                        data-bs-dismiss="modal">Tutup</button>
+                                                                        <button id="updateButton" onclick="handleUpdate(` + row.id + `, ` + row.siswa_id + `, '` + row.tanggal + `', '` + row.jam_masuk + `', '` + row.jam_pulang + `', '` + row.status + `', '` + row.keterangan + `')" type="button" class="btn btn-primary">Simpan</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>`
+                    });
+                    parent.append(html);
+                },
+                error: function(error) {
+                    console.error('Error:', error);
+                }
+            });
+        }
+    </script>
+    {{-- buat tombol pulang --}}
+    <script>
+        function handlePulang(absen_id)
+        {
+            $.ajax({
+                type: 'POST',
+                url: `/absensi/pulang/${absen_id}`,
+                data: {
+                    _token: "{{ csrf_token() }}"
+                },
+                success: function(response) {
+                    console.log(response)
+
+                    let parent = $('#tableBody')
+
+                    parent.empty()
+                    let html = ``
+                    response.filteredData.forEach(row => {
+                        html += `<tr>
+                                        <th scope="row">` + row.id + `</th>
+                                        <td>` + row.siswa.nama + `</td>
+                                        <td>` + row.tanggal + `</td>
+                                        <td>` + row.jam_masuk + `</td>
+                                        <td>` + row.jam_pulang + `</td>
+                                        <td>` + row.status + `</td>
+                                        <td>` + row.keterangan + `</td>
+                                        <td>
+                                            @can('siswa')
+                                            <button onclick="handlePulang(` + row.id + `)" class="btn btn-success">Pulang</button>
+                                            @endcan
+                                        </td>
+                                    </tr>`
+                    });
+                    parent.append(html);
+                },
+                error: function(error) {
+                    console.error('Error:', error);
+                }
+            });
         }
     </script>
 @endsection

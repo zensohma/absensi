@@ -14,7 +14,10 @@ class AbsenController extends Controller
     public function index()
     {
         $data = Siswa::all();
-        $filteredData = [];
+        $nama = auth()->user()->id;
+
+        $filteredData = Absen::with('siswa')->where('siswa_id', $nama)->get();
+        // dd($filteredData);
 
         return view('dashboard.absen', [
             'data' => $data,
@@ -48,7 +51,7 @@ class AbsenController extends Controller
         $data['jam_masuk'] = date('H:i:s');
         // dd($data);
         Absen::create($data);
-        $nama = $request->nama;
+        $nama = auth()->user()->id;
 
         $filteredData = Absen::with('siswa')->where('siswa_id', $nama)->get();
         $absen = Absen::all();
@@ -117,12 +120,24 @@ class AbsenController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
         $data = Absen::find($id);
         $data->delete();
         
-        return redirect('/absensi');
+        $nama = $request->nama;
+
+        $filteredData = Absen::with('siswa')->where('siswa_id', $nama)->get();
+        $absen = Absen::all();
+        $data = Siswa::all();
+
+        return response()->json([
+            'filteredData' => $filteredData,
+            'absen' => $absen,
+            'data' => Siswa::all(),
+            'nama' => $nama,
+            'selected' => ''
+        ]); 
     }
 
     public function filterDataByNama(Request $request)
@@ -148,5 +163,29 @@ class AbsenController extends Controller
         //     'nama' => $nama,
         //     'selected' => ''
         // ]);
+    }
+
+    public function pulang(Request $request, $id)
+    {
+        $find = Absen::findOrFail($id);
+        
+        $data = $request->except(['_token', 'nama']);
+        $data['jam_pulang'] = date('H:i:s');
+        $find->update($data);
+        
+        $nama = auth()->user()->id;
+        
+        $filteredData = Absen::with('siswa')->where('siswa_id', $nama)->get();
+        // dd($filteredData);
+        $absen = Absen::all();
+        $data = Siswa::all();
+
+        return response()->json([
+            'filteredData' => $filteredData,
+            'absen' => $absen,
+            'data' => Siswa::all(),
+            'nama' => $nama,
+            'selected' => ''
+        ]); 
     }
 }
