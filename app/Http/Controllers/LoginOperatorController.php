@@ -30,7 +30,7 @@ class LoginOperatorController extends Controller
 
     public function logout(Request $request)
     {
-        Auth::logout();
+        Auth::guard('operator')->logout();
 
         $request->session()->invalidate();
 

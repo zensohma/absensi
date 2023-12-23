@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
 class CheckIfIsLogin
@@ -15,14 +16,10 @@ class CheckIfIsLogin
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if(auth()->check())
-        {
-            if(auth()->user()->level_id == 1 || auth()->user()->level_id == 2)
-            {
-                return $next($request);
-            }
-            abort(403);
+        if (Auth::guard('web')->check() || Auth::guard('operator')->check()) {
+            return $next($request);
         }
+
         return redirect('/login');
     }
 }
