@@ -106,117 +106,6 @@
                                     </tr>
                                 </thead>
                                 <tbody id="tableBody">
-                                    @foreach ($filteredData as $tableData)
-                                        <tr>
-                                            <th scope="row">{{ $tableData->id }}</th>
-                                            <td>{{ $tableData->siswa->nama }}</td>
-                                            <td>{{ $tableData->tanggal }}</td>
-                                            <td>{{ $tableData->jam_masuk }}</td>
-                                            <td>{{ $tableData->jam_pulang }}</td>
-                                            <td>{{ $tableData->status }}</td>
-                                            <td>{{ $tableData->keterangan }}</td>
-                                            <td>
-                                                <a href="{{ url('/absensi/destroy/' . $tableData->id) }}"
-                                                    class="btn btn-danger">Delete</a>
-                                                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                                    data-bs-target="#editModal{{ $tableData->id }}">Edit</button>
-
-                                                <!-- Modal -->
-                                                <div class="modal fade" id="editModal{{ $tableData->id }}"
-                                                    tabindex="-1" aria-labelledby="staticBackdropLabel"
-                                                    aria-hidden="true" style="color: black;">
-                                                    <div
-                                                        class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-                                                        <div class="modal-content">
-                                                            <div class="modal-header"
-                                                                style="background-color: rgb(124, 206, 142); ">
-                                                                <h5 class="modal-title" id="staticBackdropLabel">Edit
-                                                                    Absen
-                                                                </h5>
-                                                                <button type="button" class="btn-close"
-                                                                    data-bs-dismiss="modal" aria-label="Close"></button>
-                                                            </div>
-                                                            <form id="formEdit"
-                                                                action="{{ url('absensi/update/' . $tableData->id) }}"
-                                                                method="post">
-                                                                @csrf
-                                                                <div class="modal-body " style="border-radius: 10px;">
-                                                                    <input id="siswa_idd" type="hidden" name="siswa_id"
-                                                                        class="form-control"
-                                                                        value="{{ $tableData->siswa_id }}">
-                                                                    <input id="tanggall" type="hidden" name="tanggal"
-                                                                        class="form-control"
-                                                                        value="{{ $tableData->tanggal }}">
-                                                                    <input id="jam_masukk" type="hidden"
-                                                                        name="jam_masuk" class="form-control"
-                                                                        value="{{ $tableData->jam_masuk }}">
-                                                                    <input id="jam_pulangg" type="hidden"
-                                                                        name="jam_pulang" class="form-control"
-                                                                        value="{{ $tableData->jam_pulang }}">
-                                                                    <input id="namaa" type="hidden" name="nama"
-                                                                        class="form-control" value="{{ $nama }}">
-                                                                    <label for="selectBarang"
-                                                                        class="form-label">Status</label>
-                                                                    <select id="statuss" name="status"
-                                                                        class="form-select"
-                                                                        aria-label="Default select example">
-                                                                        @if ('hadir' === $tableData->status)
-                                                                            <option value="hadir" selected>Hadir</option>
-                                                                            <option value="izin">Izin</option>
-                                                                        @elseif ('izin' === $tableData->status)
-                                                                            <option value="hadir">Hadir</option>
-                                                                            <option value="izin" selected>Izin</option>
-                                                                        @endif
-                                                                    </select>
-                                                                    <label for="keterangan"
-                                                                        class="form-label">Keterangan</label>
-                                                                    <input type="text" class="form-control"
-                                                                        id="keterangann" name="keterangan"
-                                                                        placeholder="Keterangan"
-                                                                        value="{{ $tableData->keterangan }}" required>
-                                                                </div>
-                                                                <div class="modal-footer">
-                                                                    <button type="button" class="btn btn-secondary"
-                                                                        data-bs-dismiss="modal">Tutup</button>
-                                                                    <div class="btn btn-primary" onclick="submitForm()">
-                                                                        Simpan</div>
-                                                            </form>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <script>
-                                            function submitForm() {
-                                                // Mengambil formulir menggunakan ID
-                                                var form = document.getElementById('formEdit');
-                                                console.log(form);
-                                                // Membuat objek FormData untuk mengambil data formulir
-                                                var formData = new FormData(form);
-
-                                                // Mengirim data formulir menggunakan AJAX
-                                                $.ajax({
-                                                    type: form.method,
-                                                    url: form.action,
-                                                    data: formData,
-                                                    processData: false,
-                                                    contentType: false,
-                                                    success: function(response) {
-                                                        // Menutup modal setelah formulir terkirim
-                                                        $('#editModal{{ $tableData->id }}').modal('hide');
-
-                                                        // Mengganti konten tabel dengan yang baru (misalnya, setelah formulir terkirim)
-                                                        // Gantilah baris ini dengan logika yang sesuai untuk me-reload tabel tanpa me-reload halaman
-
-                                                        $('#table tbody').html(response);
-                                                    },
-                                                    error: function(error) {
-                                                        console.error('Error:', error);
-                                                    }
-                                                });
-                                            }
-                                        </script>
-                                    @endforeach
                                 </tbody>
                             </table>
                         </div>
@@ -226,23 +115,7 @@
             </div>
         </div>
     </div>
-
-    <script>
-        // document.getElementById('absenForm').addEventListener('submit', function() {
-        //     // Mendapatkan tanggal dan jam saat ini
-        //     var currentDateTime = new Date();
-
-        //     // Format tanggal menjadi 'YYYY-MM-DD'
-        //     var formattedDate = currentDateTime.toISOString().split('T')[0];
-
-        //     // Format jam menjadi 'HH:mm:ss'
-        //     var formattedTime = currentDateTime.toTimeString().split(' ')[0];
-
-        //     // Set nilai input hidden
-        //     document.getElementById('tanggal').value = formattedDate;
-        //     document.getElementById('jam_masuk').value = formattedTime;
-        // });
-    </script>
+    {{-- code buat tombol filter --}}
     <script>
         function handleSelection() {
             var selectElement = document.getElementById("selectButton");
@@ -256,7 +129,6 @@
 
             const selectButton = $('#selectButton')
 
-            let updateUrl = `{{ url('absensi/update/' . `+ row.id +`) }}`
             $.ajax({
                 type: 'POST',
                 url: '/absensi/filter',
@@ -272,8 +144,10 @@
                     parent.empty()
                     let html = ``
                     response.filteredData.forEach(row => {
+                        // console.log(row)
+                        let updateUrl = "{{ url('/absensi/update') }}/" + row.id
                         html += `<tr>
-                                            <th scope="row">` + row.id + `</th>
+                                            <th scope="row"> ` + row.id + ` </th>
                                             <td>` + row.siswa.nama + `</td>
                                             <td>` + row.tanggal + `</td>
                                             <td>` + row.jam_masuk + `</td>
@@ -297,52 +171,43 @@
                                                                 <button type="button" class="btn-close"
                                                                     data-bs-dismiss="modal" aria-label="Close"></button>
                                                             </div>
-                                                            <form id="formEdit"
-                                                                action="` + updateUrl + `"
-                                                                method="post">
-                                                                @csrf
+                                                            <div>
                                                                 <div class="modal-body " style="border-radius: 10px;">
                                                                     <input id="siswa_idd" type="hidden" name="siswa_id"
-                                                                        class="form-control"
+                                                                        class="form-control siswa_idd"
                                                                         value="` + row.siswa_id + `">
                                                                     <input id="tanggall" type="hidden" name="tanggal"
-                                                                        class="form-control"
+                                                                        class="form-control tanggall"
                                                                         value="` + row.tanggal + `">
                                                                     <input id="jam_masukk" type="hidden" name="jam_masuk"
-                                                                        class="form-control"
+                                                                        class="form-control jam_masukk"
                                                                         value="` + row.jam_masuk + `">
                                                                     <input id="jam_pulangg" type="hidden"
-                                                                        name="jam_pulang" class="form-control"
+                                                                        name="jam_pulang" class="form-control jam_pulangg"
                                                                         value="` + row.jam_pulang + `">
                                                                     <input id="namaa" type="hidden" name="nama"
-                                                                        class="form-control" value="` + selectButton
+                                                                        class="form-contro namaa" value="` +
+                            selectButton
                             .val() + `">
                                                                     <label for="selectBarang"
                                                                         class="form-label">Status</label>
-                                                                    <select id="statuss" name="status"
-                                                                        class="form-select"
-                                                                        aria-label="Default select example">
-                                                                        @if ('hadir' === `+ row.status +`)
-                                                                            <option value="hadir" selected>Hadir</option>
-                                                                            <option value="izin">Izin</option>
-                                                                        @elseif ('izin' === `+ row.status +`)
-                                                                            <option value="hadir">Hadir</option>
-                                                                            <option value="izin" selected>Izin</option>
-                                                                        @endif
+                                                                    <select id="statuss" name="status" class="form-select statuss" aria-label="Default select example">
+                                                                        <option value="hadir" ${row.status === 'hadir' ? 'selected' : ''}>Hadir</option>
+                                                                        <option value="izin" ${row.status === 'izin' ? 'selected' : ''}>Izin</option>
                                                                     </select>
                                                                     <label for="keterangan"
                                                                         class="form-label">Keterangan</label>
-                                                                    <input type="text" class="form-control"
+                                                                    <input type="text" class="form-control keterangann"
                                                                         id="keterangann" name="keterangan"
                                                                         placeholder="Keterangan"
-                                                                        value="` + row.keterangan + `" required>
+                                                                        value="` + row.keterangan +
+                            `" required>
                                                                 </div>
                                                                 <div class="modal-footer">
                                                                     <button type="button" class="btn btn-secondary"
                                                                         data-bs-dismiss="modal">Tutup</button>
-                                                                    <div class="btn btn-primary" onclick="submitForm()">
-                                                                        Simpan</div>
-                                                            </form>
+                                                                        <button id="updateButton" onclick="handleUpdate(` + row.id + `, ` + row.siswa_id + `, '` + row.tanggal + `', '` + row.jam_masuk + `', '` + row.jam_pulang + `', '` + row.status + `', '` + row.keterangan + `')" type="button" class="btn btn-primary">Simpan</button>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -357,9 +222,9 @@
             });
         }
     </script>
+    {{-- code buat tombol input --}}
     <script>
         function handleInput() {
-            let updateUrl = `{{ url('absensi/update/' . `+ row.id +`) }}`
             const siswa_id = $('#siswa_id')
             const tanggal = $('#tanggal')
             const jam_masuk = $('#jam_masuk')
@@ -386,8 +251,9 @@
                     parent.empty()
                     let html = ``
                     response.filteredData.forEach(row => {
+                        let updateUrl = `{{ url('absensi/update/' . ` + row.id + `) }}`
                         html += `<tr>
-                                            <th scope="row">` + row.id + `</th>
+                            <th scope="row">` + row.id + `</th>
                                             <td>` + row.siswa.nama + `</td>
                                             <td>` + row.tanggal + `</td>
                                             <td>` + row.jam_masuk + `</td>
@@ -431,18 +297,10 @@
                                                                     <input id="namaa" type="hidden" name="nama"
                                                                         class="form-control" value="` + selectButton
                             .val() + `">
-                                                                    <label for="selectBarang"
-                                                                        class="form-label">Status</label>
-                                                                    <select id="statuss" name="status"
-                                                                        class="form-select"
-                                                                        aria-label="Default select example">
-                                                                        @if ('hadir' === `+ row.status +`)
-                                                                            <option value="hadir" selected>Hadir</option>
-                                                                            <option value="izin">Izin</option>
-                                                                        @elseif ('izin' === `+ row.status +`)
-                                                                            <option value="hadir">Hadir</option>
-                                                                            <option value="izin" selected>Izin</option>
-                                                                        @endif
+                                                                    <label for="selectBarang" class="form-label">Status</label>
+                                                                    <select id="statuss" name="status" class="form-select" aria-label="Default select example">
+                                                                        <option value="hadir" ${row.status === 'hadir' ? 'selected' : ''}>Hadir</option>
+                                                                        <option value="izin" ${row.status === 'izin' ? 'selected' : ''}>Izin</option>
                                                                     </select>
                                                                     <label for="keterangan"
                                                                         class="form-label">Keterangan</label>
@@ -454,8 +312,121 @@
                                                                 <div class="modal-footer">
                                                                     <button type="button" class="btn btn-secondary"
                                                                         data-bs-dismiss="modal">Tutup</button>
-                                                                    <div class="btn btn-primary" onclick="submitForm()">
-                                                                        Simpan</div>
+                                                                    <button type="submit"
+                                                                        class="btn btn-primary">Simpan</button>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>`
+                    });
+                    $('#inputModal').modal('hide')
+                    parent.append(html);
+                },
+                error: function(error) {
+                    console.error('Error:', error);
+                }
+            })
+        }
+    </script>
+    {{-- code buat tombol edit --}}
+    <script>
+        function handleUpdate(absen_id, siswa_id, tanggal, jam_masuk, jam_pulang, status, keterangan) {
+            // var test = JSON.parse(row)
+            // let absen_id = $(this).absen('id');
+            // const absen_id = $('row.absen_id')
+            // console.log(keterangan)
+            // const siswa_idd = $('row.siswa_id')
+            // const tanggall = $('row.tanggal')
+            // const jam_masukk = $('row.jam_masuk')
+            // const statuss = $('row.status')
+            // const keterangann = $('row.keterangan')
+            const selectButton = $('#selectButton')
+            $.ajax({
+                type: 'POST',
+                url: `/absensi/update/${absen_id}`,
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    siswa_id: siswa_id,
+                    tanggal: tanggal,
+                    jam_masuk: jam_masuk,
+                    jam_pulang: jam_pulang,
+                    status: status,
+                    keterangan: keterangan,
+                    nama: selectButton.val()
+                },
+                success: function(response) {
+                    console.log(response)
+
+                    let parent = $('#tableBody')
+
+                    parent.empty()
+                    let html = ``
+                    response.filteredData.forEach(row => {
+                        let updateUrl = `{{ url('absensi/update/' . ` + row.id + `) }}`
+                        html += `<tr>
+                            <th scope="row">` + row.id + `</th>
+                                            <td>` + row.siswa.nama + `</td>
+                                            <td>` + row.tanggal + `</td>
+                                            <td>` + row.jam_masuk + `</td>
+                                            <td>` + row.jam_pulang + `</td>
+                                            <td>` + row.status + `</td>
+                                            <td>` + row.keterangan + `</td>
+                                            <td>
+                                                <a href="{{ url('/absensi/destroy/' . `+ row.id +`) }}"
+                                                    class="btn btn-danger">Delete</a>
+                                                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                                    data-bs-target="#editModal` + row.id + `">Edit</button>
+
+                                                <!-- Modal -->
+                                                <div class="modal fade" id="editModal` + row.id + `">
+                                                        <div class="modal-content modal-dialog">
+                                                            <div class="modal-header"
+                                                                style="background-color: rgb(124, 206, 142); ">
+                                                                <h5 class="modal-title" id="staticBackdropLabel">Edit
+                                                                    Absen
+                                                                </h5>
+                                                                <button type="button" class="btn-close"
+                                                                    data-bs-dismiss="modal" aria-label="Close"></button>
+                                                            </div>
+                                                            <form id="formEdit"
+                                                                action="` + updateUrl + `"
+                                                                method="post">
+                                                                @csrf
+                                                                <div class="modal-body " style="border-radius: 10px;">
+                                                                    <input id="siswa_idd" type="hidden" name="siswa_id"
+                                                                        class="form-control"
+                                                                        value="` + row.siswa_id + `">
+                                                                    <input id="tanggall" type="hidden" name="tanggal"
+                                                                        class="form-control"
+                                                                        value="` + row.tanggal + `">
+                                                                    <input id="jam_masukk" type="hidden" name="jam_masuk"
+                                                                        class="form-control"
+                                                                        value="` + row.jam_masuk + `">
+                                                                    <input id="jam_pulangg" type="hidden"
+                                                                        name="jam_pulang" class="form-control"
+                                                                        value="` + row.jam_pulang + `">
+                                                                    <input id="namaa" type="hidden" name="nama"
+                                                                        class="form-control" value="` + selectButton
+                            .val() + `">
+                                                                    <label for="selectBarang" class="form-label">Status</label>
+                                                                    <select id="statuss" name="status" class="form-select" aria-label="Default select example">
+                                                                        <option value="hadir" ${row.status === 'hadir' ? 'selected' : ''}>Hadir</option>
+                                                                        <option value="izin" ${row.status === 'izin' ? 'selected' : ''}>Izin</option>
+                                                                    </select>
+                                                                    <label for="keterangan"
+                                                                        class="form-label">Keterangan</label>
+                                                                    <input type="text" class="form-control"
+                                                                        id="keterangann" name="keterangan"
+                                                                        placeholder="Keterangan"
+                                                                        value="` + row.keterangan + `" required>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-secondary"
+                                                                        data-bs-dismiss="modal">Tutup</button>
+                                                                    <button type="submit"
+                                                                        class="btn btn-primary">Simpan</button>
                                                             </form>
                                                         </div>
                                                     </div>

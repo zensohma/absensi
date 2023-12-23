@@ -84,23 +84,34 @@ class AbsenController extends Controller
      */
     public function update(Request $request, $id)
     {
+        dd($request);
         $find = Absen::findOrFail($id);
         // dd($nama);
-        // $request->validate([
-        //     'siswa_id' => 'required',
-        //     'tanggal' => 'required',
-        //     'jam_masuk' => 'required',
-        //     'jam_keluar' => 'required',
-        //     'status' => 'required'
-        // ]);
+        $request->validate([
+            'siswa_id' => 'required',
+            'tanggal' => 'required',
+            'jam_masuk' => 'required',
+            'status' => 'required'
+        ]);
         // dd($request);
         
         $data = $request->except(['_token', 'nama']);
         // dd($data);
         $find->update($data);
 
-        // return redirect()->back()->with($request->nama);
-        return redirect('/absensi');
+        $nama = $request->nama;
+
+        $filteredData = Absen::with('siswa')->where('siswa_id', $nama)->get();
+        $absen = Absen::all();
+        $data = Siswa::all();
+
+        return response()->json([
+            'filteredData' => $filteredData,
+            'absen' => $absen,
+            'data' => Siswa::all(),
+            'nama' => $nama,
+            'selected' => ''
+        ]); 
     }
 
     /**
@@ -121,7 +132,6 @@ class AbsenController extends Controller
 
         $filteredData = Absen::with('siswa')->where('siswa_id', $nama)->get();
         $absen = Absen::all();
-        $data = Siswa::all();
         // dd($data);
 
         return response()->json([

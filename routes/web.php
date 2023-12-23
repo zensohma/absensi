@@ -22,11 +22,6 @@ use App\Models\Siswa;
 */
 
 Route::middleware(['siswa'])->group(function(){
-    Route::get('/absensi', [AbsenController::class, 'index']);
-    Route::post('/absensi/store', [AbsenController::class, 'store']);
-    Route::post('/absensi/update/{id}', [AbsenController::class, 'update']);
-    Route::get('/absensi/destroy/{id}', [AbsenController::class, 'destroy']);
-    Route::post('/absensi/filter', [AbsenController::class, 'filterDataByNama']);
 });
 
 Route::middleware(['operator'])->group(function () {
@@ -55,6 +50,11 @@ Route::middleware(['guest'])->group(function () {
 });
 
 Route::middleware(['auth'])->group(function () {
+    Route::get('/absensi', [AbsenController::class, 'index']);
+    Route::post('/absensi/store', [AbsenController::class, 'store']);
+    Route::post('/absensi/update/{id}', [AbsenController::class, 'update']);
+    Route::get('/absensi/destroy/{id}', [AbsenController::class, 'destroy']);
+    Route::post('/absensi/filter', [AbsenController::class, 'filterDataByNama']);
     Route::get('/', function () {
         return view('dashboard.index');
     });
