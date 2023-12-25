@@ -11,22 +11,22 @@
         </nav>
         <h1 class="mb-0 fw-bold mb-3">Data Absen</h1>
         @can('operator')
-        <div>
-            <div id="filterForm">
-                <label for="nama">Pilih Nama:</label>
-                <select id="selectButton" onchange="handleSelection()" class="form-control mb-2" name="nama"
-                    {{-- id="nama" --}}>
-                    <option value="">--PILIH--</option>
-                    @foreach ($data as $dataNama)
-                        @if ($dataNama->id == $nama)
-                            {{-- @dd($dataNama) --}}
-                            {{ $selected = 'selected' }}
-                        @endif
-                        <option value="{{ $dataNama->id }}" {{ $selected }}> {{ $dataNama->nama }}</option>
-                    @endforeach
-                </select>
+            <div>
+                <div id="filterForm">
+                    <label for="nama">Pilih Nama:</label>
+                    <select id="selectButton" onchange="handleSelection()" class="form-control mb-2" name="nama"
+                        {{-- id="nama" --}}>
+                        <option value="">--PILIH--</option>
+                        @foreach ($data as $dataNama)
+                            @if ($dataNama->id == $nama)
+                                {{-- @dd($dataNama) --}}
+                                {{ $selected = 'selected' }}
+                            @endif
+                            <option value="{{ $dataNama->id }}" {{ $selected }}> {{ $dataNama->nama }}</option>
+                        @endforeach
+                    </select>
+                </div>
             </div>
-        </div>
         @endcan
     </div>
     <div class="container-fluid">
@@ -37,14 +37,14 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-body" style="background-color: rgb(238, 234, 234);">
-                        <button type="button" class="btn btn-success mb-3">Rekap Data</button>
+                        <a href="{{ url('/absensi/rekap-absen') }}" class="btn btn-success mb-3">Rekap Absen</a>
                         <!-- rekapnya ke excel -->
 
                         @can('siswa')
-                        <!-- Button trigger modal -->
-                        <a class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#inputModal">
-                            Input Data
-                        </a>
+                            <!-- Button trigger modal -->
+                            <a class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#inputModal">
+                                Absen
+                            </a>
                         @endcan
 
                         <!-- Modal -->
@@ -111,20 +111,21 @@
                                 </thead>
                                 <tbody id="tableBody">
                                     @foreach ($filteredData as $item)
-                                    <tr>
-                                        <th scope="row">{{$item->id}}</th>
-                                        <td>{{$item->siswa->nama}}</td>
-                                        <td>{{$item->tanggal}}</td>
-                                        <td>{{$item->jam_masuk}}</td>
-                                        <td>{{$item->jam_pulang}}</td>
-                                        <td>{{$item->status}}</td>
-                                        <td>{{$item->keterangan}}</td>
-                                        <td>
-                                            @can('siswa')
-                                            <button onclick="handlePulang({{$item->id}})" class="btn btn-success">Pulang</button>
-                                            @endcan
-                                        </td>
-                                    </tr>
+                                        <tr>
+                                            <th scope="row">{{ $item->id }}</th>
+                                            <td>{{ $item->siswa->nama }}</td>
+                                            <td>{{ $item->tanggal }}</td>
+                                            <td>{{ $item->jam_masuk }}</td>
+                                            <td>{{ $item->jam_pulang }}</td>
+                                            <td>{{ $item->status }}</td>
+                                            <td>{{ $item->keterangan }}</td>
+                                            <td>
+                                                @can('siswa')
+                                                    <button onclick="handlePulang({{ $item->id }})"
+                                                        class="btn btn-success">Pulang</button>
+                                                @endcan
+                                            </td>
+                                        </tr>
                                     @endforeach
                                 </tbody>
                             </table>
@@ -164,7 +165,6 @@
                     parent.empty()
                     let html = ``
                     response.filteredData.forEach(row => {
-                        // console.log(row)
                         html += `<tr>
                                             <th scope="row"> ` + row.id + ` </th>
                                             <td>` + row.siswa.nama + `</td>
@@ -175,15 +175,17 @@
                                             <td>` + row.keterangan + `</td>
                                             <td>
                                                 @can('operator')
-                                                <button onclick="handleDelete(` + row.id + `)" class="btn btn-danger">Delete</button>
-                                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal` + row.id + `">Edit</button>
+                                                <button onclick="handleDelete(` + row.id +
+                            `)" class="btn btn-danger">Delete</button>
+                                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal` +
+                            row.id + `">Edit</button>
                                                 @endcan
                                                 @can('siswa')
                                                 <button onclick="handlePulang(` + row.id + `)" class="btn btn-success">Pulang</button>
                                                 @endcan
 
                                                 <!-- Modal -->
-                                                <div class="modal fade" id="editModal` + row.id + `">
+                                                <div class="modal fade modalEdit" id="editModal` + row.id + `">
                                                         <div class="modal-content modal-dialog">
                                                             <div class="modal-header"
                                                                 style="background-color: rgb(124, 206, 142); ">
@@ -213,21 +215,23 @@
                             .val() + `">
                                                                     <label for="selectBarang"
                                                                         class="form-label">Status</label>
-                                                                    <select id="statuss" name="status" class="form-select statuss" aria-label="Default select example">
+                                                                    <select onchange="getStatus(this.value)" id="statuss" name="status" class="form-select statuss" aria-label="Default select example">
                                                                         <option value="hadir" ${row.status === 'hadir' ? 'selected' : ''}>Hadir</option>
                                                                         <option value="izin" ${row.status === 'izin' ? 'selected' : ''}>Izin</option>
                                                                     </select>
                                                                     <label for="keterangan"
                                                                         class="form-label">Keterangan</label>
-                                                                    <input type="text" class="form-control keterangann"
+                                                                    <input onchange="getKeterangan(this.value)" type="text" class="form-control keterangann"
                                                                         id="keterangann" name="keterangan"
                                                                         placeholder="Keterangan"
-                                                                        value="` + row.keterangan + `" required>
+                                                                        value="` + row.keterangan +
+                            `" required>
                                                                 </div>
                                                                 <div class="modal-footer">
                                                                     <button type="button" class="btn btn-secondary"
                                                                         data-bs-dismiss="modal">Tutup</button>
-                                                                        <button id="updateButton" onclick="handleUpdate(` + row.id + `, ` + row.siswa_id + `, '` + row.tanggal + `', '` + row.jam_masuk + `', '` + row.jam_pulang + `', '` + row.status + `', '` + row.keterangan + `')" type="button" class="btn btn-primary">Simpan</button>
+                                                                        <button id="updateButton" onclick="handleUpdate(` +
+                            row.id + `)" type="button" class="btn btn-primary">Simpan</button>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -296,28 +300,26 @@
     </script>
     {{-- code buat tombol edit --}}
     <script>
-        function handleUpdate(absen_id, siswa_id, tanggal, jam_masuk, jam_pulang, status, keterangan) {
-            // var test = JSON.parse(row)
-            // let absen_id = $(this).absen('id');
-            // const absen_id = $('row.absen_id')
-            // const siswa_idd = $('row.siswa_id')
-            // const tanggall = $('row.tanggal')
-            // const jam_masukk = $('row.jam_masuk')
-            // const statuss = $('row.status')
-            const keterangann = $('#keterangann').absen_id
+        let isi_keterangan;
+
+        function getKeterangan(value) {
+            isi_keterangan = value
+        }
+        let isi_status;
+
+        function getStatus(value) {
+            isi_status = value
+        }
+
+        function handleUpdate(absen_id) {
             const selectButton = $('#selectButton')
-            console.log(keterangann)
             $.ajax({
                 type: 'POST',
                 url: `/absensi/update/${absen_id}`,
                 data: {
                     _token: "{{ csrf_token() }}",
-                    siswa_id: siswa_id,
-                    tanggal: tanggal,
-                    jam_masuk: jam_masuk,
-                    jam_pulang: jam_pulang,
-                    status: status,
-                    keterangan: keterangan,
+                    status: isi_status,
+                    keterangan: isi_keterangan,
                     nama: selectButton.val()
                 },
                 success: function(response) {
@@ -327,10 +329,10 @@
 
                     parent.empty()
                     let html = ``
+                    let test = ''
                     response.filteredData.forEach(row => {
-                        let updateUrl = `{{ url('absensi/update/' . ` + row.id + `) }}`
                         html += `<tr>
-                            <th scope="row"> ` + row.id + ` </th>
+                                            <th scope="row"> ` + row.id + ` </th>
                                             <td>` + row.siswa.nama + `</td>
                                             <td>` + row.tanggal + `</td>
                                             <td>` + row.jam_masuk + `</td>
@@ -338,12 +340,18 @@
                                             <td>` + row.status + `</td>
                                             <td>` + row.keterangan + `</td>
                                             <td>
-                                                <button onclick="handleDelete(` + row.id + `)" class="btn btn-danger">Delete</button>
-                                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal` + row.id + `">Edit</button>
+                                                @can('operator')
+                                                <button onclick="handleDelete(` + row.id +
+                            `)" class="btn btn-danger">Delete</button>
+                                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal` +
+                            row.id + `">Edit</button>
+                                                @endcan
+                                                @can('siswa')
                                                 <button onclick="handlePulang(` + row.id + `)" class="btn btn-success">Pulang</button>
+                                                @endcan
 
                                                 <!-- Modal -->
-                                                <div class="modal fade" id="editModal` + row.id + `">
+                                                <div class="modal fade modalEdit" id="editModal` + row.id + `">
                                                         <div class="modal-content modal-dialog">
                                                             <div class="modal-header"
                                                                 style="background-color: rgb(124, 206, 142); ">
@@ -373,29 +381,34 @@
                             .val() + `">
                                                                     <label for="selectBarang"
                                                                         class="form-label">Status</label>
-                                                                    <select id="statuss" name="status" class="form-select statuss" aria-label="Default select example">
+                                                                    <select onchange="getStatus(this.value)" id="statuss" name="status" class="form-select statuss" aria-label="Default select example">
                                                                         <option value="hadir" ${row.status === 'hadir' ? 'selected' : ''}>Hadir</option>
                                                                         <option value="izin" ${row.status === 'izin' ? 'selected' : ''}>Izin</option>
                                                                     </select>
                                                                     <label for="keterangan"
                                                                         class="form-label">Keterangan</label>
-                                                                    <input type="text" class="form-control keterangann"
+                                                                    <input onchange="getKeterangan(this.value)" type="text" class="form-control keterangann"
                                                                         id="keterangann" name="keterangan"
                                                                         placeholder="Keterangan"
-                                                                        value="` + row.keterangan + `" required>
+                                                                        value="` + row.keterangan +
+                            `" required>
                                                                 </div>
                                                                 <div class="modal-footer">
                                                                     <button type="button" class="btn btn-secondary"
                                                                         data-bs-dismiss="modal">Tutup</button>
-                                                                        <button id="updateButton" onclick="handleUpdate(` + row.id + `, ` + row.siswa_id + `, '` + row.tanggal + `', '` + row.jam_masuk + `', '` + row.jam_pulang + `', '` + row.status + `', '` + row.keterangan + `')" type="button" class="btn btn-primary">Simpan</button>
+                                                                        <button id="updateButton" onclick="handleUpdate(` +
+                            row.id + `)" type="button" class="btn btn-primary">Simpan</button>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </td>
                                         </tr>`
+                        // $(".modalEdit").modal('hide')
+                        let test = $('#editModal' + row.id)
+                        console.log(test)
                     });
-                    $('#inputModal').modal('hide')
+                    // test.modal('hide')
                     parent.append(html);
                 },
                 error: function(error) {
@@ -406,8 +419,7 @@
     </script>
     {{-- buat tombol delete --}}
     <script>
-        function handleDelete(absen_id) 
-        {
+        function handleDelete(absen_id) {
             // console.log(absen_id)
             const selectButton = $('#selectButton')
             $.ajax({
@@ -425,7 +437,6 @@
                     parent.empty()
                     let html = ``
                     response.filteredData.forEach(row => {
-                        // console.log(row)
                         html += `<tr>
                                             <th scope="row"> ` + row.id + ` </th>
                                             <td>` + row.siswa.nama + `</td>
@@ -436,15 +447,17 @@
                                             <td>` + row.keterangan + `</td>
                                             <td>
                                                 @can('operator')
-                                                <button onclick="handleDelete(` + row.id + `)" class="btn btn-danger">Delete</button>
-                                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal` + row.id + `">Edit</button>
+                                                <button onclick="handleDelete(` + row.id +
+                            `)" class="btn btn-danger">Delete</button>
+                                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal` +
+                            row.id + `">Edit</button>
                                                 @endcan
                                                 @can('siswa')
                                                 <button onclick="handlePulang(` + row.id + `)" class="btn btn-success">Pulang</button>
                                                 @endcan
 
                                                 <!-- Modal -->
-                                                <div class="modal fade" id="editModal` + row.id + `">
+                                                <div class="modal fade modalEdit" id="editModal` + row.id + `">
                                                         <div class="modal-content modal-dialog">
                                                             <div class="modal-header"
                                                                 style="background-color: rgb(124, 206, 142); ">
@@ -474,21 +487,23 @@
                             .val() + `">
                                                                     <label for="selectBarang"
                                                                         class="form-label">Status</label>
-                                                                    <select id="statuss" name="status" class="form-select statuss" aria-label="Default select example">
+                                                                    <select onchange="getStatus(this.value)" id="statuss" name="status" class="form-select statuss" aria-label="Default select example">
                                                                         <option value="hadir" ${row.status === 'hadir' ? 'selected' : ''}>Hadir</option>
                                                                         <option value="izin" ${row.status === 'izin' ? 'selected' : ''}>Izin</option>
                                                                     </select>
                                                                     <label for="keterangan"
                                                                         class="form-label">Keterangan</label>
-                                                                    <input type="text" class="form-control keterangann"
+                                                                    <input onchange="getKeterangan(this.value)" type="text" class="form-control keterangann"
                                                                         id="keterangann" name="keterangan"
                                                                         placeholder="Keterangan"
-                                                                        value="` + row.keterangan + `" required>
+                                                                        value="` + row.keterangan +
+                            `" required>
                                                                 </div>
                                                                 <div class="modal-footer">
                                                                     <button type="button" class="btn btn-secondary"
                                                                         data-bs-dismiss="modal">Tutup</button>
-                                                                        <button id="updateButton" onclick="handleUpdate(` + row.id + `, ` + row.siswa_id + `, '` + row.tanggal + `', '` + row.jam_masuk + `', '` + row.jam_pulang + `', '` + row.status + `', '` + row.keterangan + `')" type="button" class="btn btn-primary">Simpan</button>
+                                                                        <button id="updateButton" onclick="handleUpdate(` +
+                            row.id + `)" type="button" class="btn btn-primary">Simpan</button>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -506,8 +521,7 @@
     </script>
     {{-- buat tombol pulang --}}
     <script>
-        function handlePulang(absen_id)
-        {
+        function handlePulang(absen_id) {
             $.ajax({
                 type: 'POST',
                 url: `/absensi/pulang/${absen_id}`,

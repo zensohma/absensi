@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Absen;
 use App\Models\Siswa;
+use App\Exports\AbsenExport;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Maatwebsite\Excel\Facades\Excel;
 
 class AbsenController extends Controller
 {
@@ -87,20 +90,38 @@ class AbsenController extends Controller
      */
     public function update(Request $request, $id)
     {
-        dd($request);
-        $find = Absen::findOrFail($id);
-        // dd($nama);
-        $request->validate([
-            'siswa_id' => 'required',
-            'tanggal' => 'required',
-            'jam_masuk' => 'required',
-            'status' => 'required'
-        ]);
         // dd($request);
+
+        if (empty($request->status) && empty($request->keterangan)) {
+            $nama = $request->nama;
+
+            $filteredData = Absen::with('siswa')->where('siswa_id', $nama)->get();
+            $absen = Absen::all();
+            $data = Siswa::all();
+
+            return response()->json([
+                'filteredData' => $filteredData,
+                'absen' => $absen,
+                'data' => Siswa::all(),
+                'nama' => $nama,
+                'selected' => ''
+            ]);
+        }
+
+        if (!empty($request->status)) {
+            $find = Absen::findOrFail($id);
+            $find->update([
+                'status' => $request->status
+            ]);
+        }
+        if (!empty($request->keterangan)) {
+            $find = Absen::findOrFail($id);
+            $find->update([
+                'keterangan' => $request->keterangan
+            ]);
+        }
+
         
-        $data = $request->except(['_token', 'nama']);
-        // dd($data);
-        $find->update($data);
 
         $nama = $request->nama;
 
@@ -187,5 +208,10 @@ class AbsenController extends Controller
             'nama' => $nama,
             'selected' => ''
         ]); 
+    }
+
+    public function absenexport()
+    {
+        return Excel::download(new AbsenExport, 'Rekap Absen.xlsx');
     }
 }
