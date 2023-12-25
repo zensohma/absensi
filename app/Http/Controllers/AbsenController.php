@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Absen;
 use App\Models\Siswa;
+use App\Exports\AbsenExport;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Maatwebsite\Excel\Facades\Excel;
 
 class AbsenController extends Controller
 {
@@ -14,7 +17,10 @@ class AbsenController extends Controller
     public function index()
     {
         $data = Siswa::all();
-        $filteredData = [];
+        $nama = auth()->user()->id;
+
+        $filteredData = Absen::with('siswa')->where('siswa_id', $nama)->get();
+        // dd($filteredData);
 
         return view('dashboard.absen', [
             'data' => $data,
@@ -48,7 +54,7 @@ class AbsenController extends Controller
         $data['jam_masuk'] = date('H:i:s');
         // dd($data);
         Absen::create($data);
-        $nama = $request->nama;
+        $nama = auth()->user()->id;
 
         $filteredData = Absen::with('siswa')->where('siswa_id', $nama)->get();
         $absen = Absen::all();
@@ -84,20 +90,38 @@ class AbsenController extends Controller
      */
     public function update(Request $request, $id)
     {
-        dd($request);
-        $find = Absen::findOrFail($id);
-        // dd($nama);
-        $request->validate([
-            'siswa_id' => 'required',
-            'tanggal' => 'required',
-            'jam_masuk' => 'required',
-            'status' => 'required'
-        ]);
         // dd($request);
+
+        if (empty($request->status) && empty($request->keterangan)) {
+            $nama = $request->nama;
+
+            $filteredData = Absen::with('siswa')->where('siswa_id', $nama)->get();
+            $absen = Absen::all();
+            $data = Siswa::all();
+
+            return response()->json([
+                'filteredData' => $filteredData,
+                'absen' => $absen,
+                'data' => Siswa::all(),
+                'nama' => $nama,
+                'selected' => ''
+            ]);
+        }
+
+        if (!empty($request->status)) {
+            $find = Absen::findOrFail($id);
+            $find->update([
+                'status' => $request->status
+            ]);
+        }
+        if (!empty($request->keterangan)) {
+            $find = Absen::findOrFail($id);
+            $find->update([
+                'keterangan' => $request->keterangan
+            ]);
+        }
+
         
-        $data = $request->except(['_token', 'nama']);
-        // dd($data);
-        $find->update($data);
 
         $nama = $request->nama;
 
@@ -117,12 +141,24 @@ class AbsenController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
         $data = Absen::find($id);
         $data->delete();
         
-        return redirect('/absensi');
+        $nama = $request->nama;
+
+        $filteredData = Absen::with('siswa')->where('siswa_id', $nama)->get();
+        $absen = Absen::all();
+        $data = Siswa::all();
+
+        return response()->json([
+            'filteredData' => $filteredData,
+            'absen' => $absen,
+            'data' => Siswa::all(),
+            'nama' => $nama,
+            'selected' => ''
+        ]); 
     }
 
     public function filterDataByNama(Request $request)
@@ -148,5 +184,34 @@ class AbsenController extends Controller
         //     'nama' => $nama,
         //     'selected' => ''
         // ]);
+    }
+
+    public function pulang(Request $request, $id)
+    {
+        $find = Absen::findOrFail($id);
+        
+        $data = $request->except(['_token', 'nama']);
+        $data['jam_pulang'] = date('H:i:s');
+        $find->update($data);
+        
+        $nama = auth()->user()->id;
+        
+        $filteredData = Absen::with('siswa')->where('siswa_id', $nama)->get();
+        // dd($filteredData);
+        $absen = Absen::all();
+        $data = Siswa::all();
+
+        return response()->json([
+            'filteredData' => $filteredData,
+            'absen' => $absen,
+            'data' => Siswa::all(),
+            'nama' => $nama,
+            'selected' => ''
+        ]); 
+    }
+
+    public function absenexport()
+    {
+        return Excel::download(new AbsenExport, 'Rekap Absen.xlsx');
     }
 }

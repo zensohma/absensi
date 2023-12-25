@@ -21,12 +21,10 @@ use App\Models\Siswa;
 |
 */
 
-Route::middleware('auth')->group(function () {
-    Route::get('/absensi', [AbsenController::class, 'index']);
+Route::middleware('siswa')->group(function () {
     Route::post('/absensi/store', [AbsenController::class, 'store']);
-    Route::post('/absensi/update/{id}', [AbsenController::class, 'update']);
-    Route::get('/absensi/destroy/{id}', [AbsenController::class, 'destroy']);
-    Route::post('/absensi/filter', [AbsenController::class, 'filterDataByNama']);
+    Route::post('/absensi/pulang/{id}', [AbsenController::class, 'pulang']);
+    Route::get('/absensi/rekap-absen', [AbsenController::class, 'absenexport']);
 });
 
 Route::middleware('auth:operator')->group(function () {
@@ -34,16 +32,20 @@ Route::middleware('auth:operator')->group(function () {
     Route::post('/siswa/store', [SiswaController::class, 'store']);
     Route::post('/siswa/update/{id}', [SiswaController::class, 'update']);
     Route::get('/siswa/destroy/{id}', [SiswaController::class, 'destroy']);
-
+    
     Route::get('/operator', [OperatorController::class, 'index']);
     Route::post('/operator/store', [OperatorController::class, 'store']);
     Route::post('/operator/update/{id}', [OperatorController::class, 'update']);
     Route::get('/operator/destroy/{id}', [OperatorController::class, 'destroy']);
-
+    
     Route::get('/level', [LevelController::class, 'index']);
     Route::post('/level/store', [LevelController::class, 'store']);
     Route::post('/level/update/{id}', [LevelController::class, 'update']);
     Route::get('/level/destroy/{id}', [LevelController::class, 'destroy']);
+    
+    Route::post('/absensi/update/{id}', [AbsenController::class, 'update']);
+    Route::get('/absensi/destroy/{id}', [AbsenController::class, 'destroy']);
+    Route::post('/absensi/filter', [AbsenController::class, 'filterDataByNama']);
 });
 
 Route::middleware(['guest'])->group(function () {
@@ -57,5 +59,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/', function () {
         return view('dashboard.index');
     });
+    Route::get('/absensi', [AbsenController::class, 'index']);
     Route::post('/logout', [LoginController::class, 'logout']);
 });
