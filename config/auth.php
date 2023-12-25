@@ -18,9 +18,6 @@ return [
     */
 
     'defaults' => [
-        // salahnya itu disini nah
-        // harusnya tu begini
-        // 'guard' => ['web', 'operator'],
         'guard' => 'operator',
         'passwords' => 'users',
     ],

@@ -23,7 +23,7 @@ class LoginController extends Controller
             'nis' => 'required',
             'password' => 'required'
         ]);
-        if (Auth::attempt($credentials)) {
+        if (Auth::guard('web')->attempt($credentials)) {
             $request->session()->regenerate();
             return redirect()->intended('/absensi');
         }
