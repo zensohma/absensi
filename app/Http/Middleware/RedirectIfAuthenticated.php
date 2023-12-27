@@ -25,6 +25,20 @@ class RedirectIfAuthenticated
             }
         }
 
+        // switch ($guard) {
+        //     case 'web':
+        //         if (Auth::guard($guard)->check()) {
+        //             return redirect()->route('dashboard.absen');
+        //         }
+        //         break;
+            
+        //     default:
+        //         if (Auth::guard($guard)->check()) {
+        //             return redirect('/absen');
+        //         }
+        //         break;
+        // }
+
         return $next($request);
     }
 }

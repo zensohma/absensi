@@ -6,7 +6,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
-{
+{   
+    
+    
+    
     public function index()
     {
         return view('dashboard.login', [
@@ -17,8 +20,7 @@ class LoginController extends Controller
 
     public function authenticate(Request $request)
     {
-        // dd($request);
-        // dd($request);
+        
         $credentials = $request->validate([
             'nis' => 'required',
             'password' => 'required'
@@ -29,6 +31,22 @@ class LoginController extends Controller
         }
         return back()->with('LoginError', 'Login Failed');
     }
+    // ini udah ku coba tapi gamau coy
+    //     $this->validate($request, [
+    //         'nis' => 'required',
+    //         'password' => 'required'
+    //     ]);
+
+    //     $nis = $request->nis;
+    //     $password = $request->password;
+    //     $remember = $request->remember;
+
+    //     if (Auth::guard('web')->attempt(['nis' => $nis, 'password' => $password], $remember)) {
+    //         return redirect()->intended(route('dashboard.absen'));
+    //     }
+
+    //     return redirect()->back()->withInput($request->only('nis', 'remember'));
+    // }
 
     public function logout(Request $request)
     {
